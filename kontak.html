@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontak - Command Computer Service</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+        body { background-color: #0a0a1a; color: #e5e7eb; }
+        .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-field { width: 100%; padding: 12px; background: #0a0a1a; border: 1px solid #1f2937; border-radius: 8px; color: white; margin-top: 8px; }
+        .input-field:focus { outline: none; border-color: #00d2ff; }
+  </style>
+</head>
+<body class="h-full">
+
+  <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+     <div class="flex items-center gap-2">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">CCS</div>
+      <div>
+       <a href="index.html"><h1 class="text-lg font-bold gradient-text">Command Computer Service</h1></a>
+      </div>
+     </div>
+     <div class="hidden md:flex items-center gap-6 text-sm">
+        <a href="index.html" class="text-gray-400 hover:text-white">Home</a>
+        <a href="artikel.html" class="text-gray-400 hover:text-white">Artikel</a>
+        <a href="service.html" class="text-gray-400 hover:text-white">Service</a>
+        <a href="kontak.html" class="text-white font-semibold">Kontak</a>
+     </div>
+    </div>
+  </header>
+
+  <section class="max-w-5xl mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold mb-2 gradient-text">Hubungi Kami</h2>
+    <p class="text-gray-400 mb-8">Konsultasikan masalah komputer Anda atau tinggalkan pesan untuk kami.</p>
+
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50">
+            <h3 class="text-xl font-bold mb-4 text-white">Tinggalkan Pesan</h3>
+            <form id="contactForm" class="space-y-4">
+                <div>
+                    <label class="text-sm text-gray-400">Nama Lengkap</label>
+                    <input type="text" id="senderName" class="input-field" required>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400">Email atau No. WhatsApp</label>
+                    <input type="text" id="senderContact" class="input-field" required>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400">Pesan / Keluhan</label>
+                    <textarea id="senderMessage" rows="4" class="input-field" required></textarea>
+                </div>
+                <button type="submit" id="btnSubmit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90">Kirim Pesan</button>
+                <p id="formStatus" class="text-sm mt-2 hidden"></p>
+            </form>
+        </div>
+
+        <div class="space-y-8">
+            <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50 flex flex-col items-center text-center">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-4">
+                    <i data-lucide="phone" style="width:32px;height:32px;color:white;"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Chat via WhatsApp</h3>
+                <p class="text-green-400 text-lg font-bold mb-4">+62 821-2232-1195</p>
+                <button onclick="window.open('https://wa.me/6282122321195', '_blank')" class="px-8 py-3 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-lg w-full">Chat Sekarang</button>
+            </div>
+
+            <div class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50">
+                <h3 class="text-lg font-bold mb-3 text-white">Lokasi Bengkel</h3>
+                <p class="text-sm text-gray-400 mb-2"><i data-lucide="map-pin" class="inline w-4 h-4 mr-1"></i> Gg.Musik Desa Lebak Anyar</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.576369462316!2d107.46165339999999!3d-6.575025699999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e690fb683539b69%3A0xbaf1e249c9a10d4a!2sCommand%20Computer%20Service!5e0!3m2!1sid!2sid!4v1780904819859!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  
+
+  <script>
+    lucide.createIcons();
+    
+    // Logika Firebase Realtime Database via REST API
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnSubmit');
+        const status = document.getElementById('formStatus');
+        btn.textContent = 'Mengirim...';
+        btn.disabled = true;
+
+        const dataPesan = {
+            nama: document.getElementById('senderName').value,
+            kontak: document.getElementById('senderContact').value,
+            pesan: document.getElementById('senderMessage').value,
+            waktu: new Date().toISOString()
+        };
+
+        // URL Endpoint Firebase Anda (menambahkan /pesan.json untuk membuat tabel 'pesan')
+        const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/pesan.json';
+
+        try {
+            const response = await fetch(firebaseUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataPesan)
+            });
+
+            if(response.ok) {
+                status.textContent = '✅ Pesan berhasil terkirim!';
+                status.className = 'text-sm mt-2 text-green-400 block';
+                document.getElementById('contactForm').reset();
+            } else {
+                throw new Error('Gagal mengirim');
+            }
+        } catch (error) {
+            status.textContent = '❌ Terjadi kesalahan koneksi.';
+            status.className = 'text-sm mt-2 text-red-400 block';
+        } finally {
+            btn.textContent = 'Kirim Pesan';
+            btn.disabled = false;
+        }
+    });
+  </script>
+</body>
+<footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
+      <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
+  </footer>
+</html>
