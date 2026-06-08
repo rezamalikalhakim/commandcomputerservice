@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tentang Kami - Command Computer Service</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+      body { background-color: #0a0a1a; color: #e5e7eb; font-family: 'Plus Jakarta Sans', sans-serif; }
+      .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .mono { font-family: 'Space Mono', monospace; }
+  </style>
+</head>
+<body class="h-full">
+
+  <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+     <div class="flex items-center gap-2">
+      <button onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="menu" style="width:22px;height:22px;"></i></button>
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="img/Logo.png" width="100%" height="100%"></div>
+      <div>
+       <a href="index.html"><h1 class="text-lg font-bold gradient-text">Command Computer Service</h1></a>
+       <p class="text-[10px] text-gray-500 mono">by Reza Malik Al Hakim</p>
+      </div>
+     </div>
+     
+     <div class="hidden md:flex items-center gap-6 text-sm">
+        <a href="index.html" class="text-white">Home</a>
+        <a href="artikel.html" class="text-gray-400 hover:text-white transition-colors">Artikel</a>
+        <a href="service.html" class="text-gray-400 hover:text-white transition-colors">Service</a>
+        <a href="kontak.html" class="text-gray-400 hover:text-white transition-colors">Kontak</a>
+     </div>
+     <a href="kontak.html" class="hidden sm:block px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-black text-sm font-semibold rounded-lg transition-colors">Daftar Service</a>
+    </div>
+  </header>
+
+  <section class="max-w-4xl mx-auto px-4 py-16">
+     <h2 class="text-3xl font-bold mb-6 gradient-text">Disclaimer</h2>
+     <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50 space-y-4 text-sm text-gray-300 leading-relaxed">
+      <p><strong>Terakhir diperbarui:</strong> 1 Januari 2025</p>
+      <h3 class="text-lg font-bold text-white pt-2">Penafian Umum</h3>
+      <p>Seluruh informasi yang disajikan di website Command Computer Service oleh Reza Malik Al Hakim ini bertujuan untuk edukasi dan referensi. Informasi disediakan berdasarkan pengalaman dan pengetahuan profesional, namun kami tidak menjamin keakuratan 100% untuk setiap situasi.</p>
+      <h3 class="text-lg font-bold text-white pt-2">Risiko Penggunaan</h3>
+      <p>Setiap tindakan troubleshooting yang Anda lakukan berdasarkan konten di Situs ini sepenuhnya menjadi tanggung jawab Anda. Kami sangat menyarankan untuk:</p>
+      <ul class="list-disc list-inside space-y-1 text-gray-400">
+       <li>Selalu backup data penting sebelum melakukan perbaikan</li>
+       <li>Konsultasikan dengan teknisi profesional untuk kasus kompleks</li>
+       <li>Tidak membuka komponen jika tidak memiliki pengetahuan memadai</li>
+       <li>Menggunakan peralatan keselamatan saat bekerja dengan komponen elektronik</li>
+      </ul>
+      <h3 class="text-lg font-bold text-white pt-2">Tautan Eksternal</h3>
+      <p>Situs ini mungkin mengandung tautan ke website pihak ketiga. Kami tidak bertanggung jawab atas konten, kebijakan privasi, atau praktik dari website pihak ketiga tersebut.</p>
+      <h3 class="text-lg font-bold text-white pt-2">Iklan</h3>
+      <p>Situs ini menampilkan iklan dari pihak ketiga (termasuk Google AdSense). Iklan yang ditampilkan tidak berarti endorsement atau rekomendasi dari Command Computer Service. Konten iklan sepenuhnya dikelola oleh penyedia layanan iklan.</p>
+      <h3 class="text-lg font-bold text-white pt-2">Kontak</h3>
+      <p>Jika Anda memiliki pertanyaan tentang disclaimer ini, silakan hubungi kami melalui halaman Service atau email: command.computer.service@gmail.com</p>
+     </div>
+    </section>
+
+  
+</body>
+<footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
+      <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
+  </footer>
+</html>
