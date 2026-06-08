@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontak - Command Computer Service</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+ 
+ <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+        body { background-color: #0a0a1a; color: #e5e7eb; }
+        .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-field { width: 100%; padding: 12px; background: #0a0a1a; border: 1px solid #1f2937; border-radius: 8px; color: white; margin-top: 8px; }
+        .input-field:focus { outline: none; border-color: #00d2ff; }
+  
+  * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+        html, body { height: 100%; margin: 0; background-color: #0a0a1a; color: #e5e7eb; overflow-x: hidden; }
+        
+        /* Animasi Slide Menu */
+        .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+        .slide-menu.open { transform: translateX(0); }
+        .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.open { opacity: 1; pointer-events: all; }
+        
+        /* Utilitas Tampilan */
+        .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .ad-space { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px dashed #0f3460; border-radius: 12px; padding: 40px 20px; text-align: center; color: #4a6fa5; font-size: 14px; }
+  
+  
+  </style>
+</head>
+<body class="h-full">
+
+    <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu()"></div>
+
+  <nav id="slideMenu" class="slide-menu fixed top-0 left-0 h-full w-72 bg-[#0f0f2a] z-50 shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-gray-800">
+     <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="img/Logo.png" width="100%" height="100%"></div>
+       <span class="mono text-xs text-cyan-400 font-bold">Menu</span>
+      </div>
+      <button onclick="toggleMenu()" class="text-gray-400 hover:text-white"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+     </div>
+     <p class="text-xs text-gray-500 mt-1">Command Computer Service</p>
+    </div>
+    
+    <ul class="p-4 space-y-1">
+     <li><a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i data-lucide="home" style="width:14px;height:14px;color:white;"></i></div> Home</a></li>
+     <li><a href="about.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center"><i data-lucide="info" style="width:14px;height:14px;color:white;"></i></div> About & Profile</a></li>
+     <li><a href="artikel.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i data-lucide="file-text" style="width:14px;height:14px;color:white;"></i></div> Artikel</a></li>
+     <li><a href="service.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center"><i data-lucide="settings" style="width:14px;height:14px;color:white;"></i></div> Service</a></li>
+     <li><a href="galeri.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center"><i data-lucide="image" style="width:14px;height:14px;color:white;"></i></div> Galeri</a></li>
+     <li><a href="kontak.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center"><i data-lucide="phone" style="width:14px;height:14px;color:white;"></i></div> Kontak</a></li>
+     <li><a href="sitemap.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center"><i data-lucide="map" style="width:14px;height:14px;color:white;"></i></div> Sitemap</a></li>
+     <li><a href="termsandconditions.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center"><i data-lucide="shield" style="width:14px;height:14px;color:white;"></i></div> Terms & Conditions</a></li>
+     <li><a href="disclaimer.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center"><i data-lucide="alert-triangle" style="width:14px;height:14px;color:white;"></i></div> Disclaimer</a></li>
+    </ul>
+
+    <div class="p-6 mt-4 border-t border-gray-800">
+        <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider">Social Media</p>
+        <div class="flex gap-4">
+            <a href="https://instagram.com/_reza1996ma_" target="_blank" class="text-gray-400 hover:text-pink-500 transition-colors"><i data-lucide="instagram" style="width:20px;height:20px;"></i></a>
+            <a href="https://facebook.com/commandcomputerservice" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors"><i data-lucide="facebook" style="width:20px;height:20px;"></i></a>
+        </div>
+    </div>
+  </nav>
+
+  <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+     <div class="flex items-center gap-2">
+      <button onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="menu" style="width:22px;height:22px;"></i></button>
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="img/Logo.png" width="100%" height="100%"></div>
+      <div>
+       <a href="index.html"><h1 class="text-lg font-bold gradient-text">Command Computer Service</h1></a>
+       <p class="text-[10px] text-gray-500 mono">by Reza Malik Al Hakim</p>
+      </div>
+     </div>
+     
+     <div class="hidden md:flex items-center gap-6 text-sm">
+        <a href="index.html" class="text-white">Home</a>
+        <a href="artikel.html" class="text-gray-400 hover:text-white transition-colors">Artikel</a>
+        <a href="service.html" class="text-gray-400 hover:text-white transition-colors">Service</a>
+        <a href="kontak.html" class="text-gray-400 hover:text-white transition-colors">Kontak</a>
+     </div>
+     <a href="kontak.html" class="hidden sm:block px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-black text-sm font-semibold rounded-lg transition-colors">Daftar Service</a>
+    </div>
+  </header>
+
+  <section class="max-w-5xl mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold mb-2 gradient-text">Hubungi Kami</h2>
+    <p class="text-gray-400 mb-8">Konsultasikan masalah komputer Anda atau tinggalkan pesan untuk kami.</p>
+
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50">
+            <h3 class="text-xl font-bold mb-4 text-white">Tinggalkan Pesan</h3>
+            <form id="contactForm" class="space-y-4">
+                <div>
+                    <label class="text-sm text-gray-400">Nama Lengkap</label>
+                    <input type="text" id="senderName" class="input-field" required>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400">Email atau No. WhatsApp</label>
+                    <input type="text" id="senderContact" class="input-field" required>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400">Pesan / Keluhan</label>
+                    <textarea id="senderMessage" rows="4" class="input-field" required></textarea>
+                </div>
+                <button type="submit" id="btnSubmit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90">Kirim Pesan</button>
+                <p id="formStatus" class="text-sm mt-2 hidden"></p>
+            </form>
+        </div>
+
+        <div class="space-y-8">
+            <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50 flex flex-col items-center text-center">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-4">
+                    <i data-lucide="phone" style="width:32px;height:32px;color:white;"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Chat via WhatsApp</h3>
+                <p class="text-green-400 text-lg font-bold mb-4">+62 821-2232-1195</p>
+                <button onclick="window.open('https://wa.me/6282122321195', '_blank')" class="px-8 py-3 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-lg w-full">Chat Sekarang</button>
+            </div>
+
+            <div class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50">
+                <h3 class="text-lg font-bold mb-3 text-white">Lokasi Bengkel</h3>
+                <p class="text-sm text-gray-400 mb-2"><i data-lucide="map-pin" class="inline w-4 h-4 mr-1"></i> Gg.Musik Desa Lebak Anyar</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.576369462316!2d107.46165339999999!3d-6.575025699999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e690fb683539b69%3A0xbaf1e249c9a10d4a!2sCommand%20Computer%20Service!5e0!3m2!1sid!2sid!4v1780904819859!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  
+
+  <script>
+    lucide.createIcons();
+    
+    // Logika Firebase Realtime Database via REST API
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnSubmit');
+        const status = document.getElementById('formStatus');
+        btn.textContent = 'Mengirim...';
+        btn.disabled = true;
+
+        const dataPesan = {
+            nama: document.getElementById('senderName').value,
+            kontak: document.getElementById('senderContact').value,
+            pesan: document.getElementById('senderMessage').value,
+            waktu: new Date().toISOString()
+        };
+
+        // URL Endpoint Firebase Anda (menambahkan /pesan.json untuk membuat tabel 'pesan')
+        const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/pesan.json';
+
+        try {
+            const response = await fetch(firebaseUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataPesan)
+            });
+
+            if(response.ok) {
+                status.textContent = '✅ Pesan berhasil terkirim!';
+                status.className = 'text-sm mt-2 text-green-400 block';
+                document.getElementById('contactForm').reset();
+            } else {
+                throw new Error('Gagal mengirim');
+            }
+        } catch (error) {
+            status.textContent = '❌ Terjadi kesalahan koneksi.';
+            status.className = 'text-sm mt-2 text-red-400 block';
+        } finally {
+            btn.textContent = 'Kirim Pesan';
+            btn.disabled = false;
+        }
+    });
+
+    // Fungsi Buka/Tutup Slide Menu
+        function toggleMenu(forceClose) {
+            const menu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
+            if (forceClose === false || menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                menu.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        // Inisialisasi Icon
+        lucide.createIcons();
+
+  </script>
+
+  
+</body>
+<footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
+      <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
+  </footer>
+</html>
