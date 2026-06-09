@@ -54,7 +54,23 @@
      </div>
     </section>
 
+<script>
+        // Fungsi Buka/Tutup Slide Menu
+        function toggleMenu(forceClose) {
+            const menu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
+            if (forceClose === false || menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                menu.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
 
+        // Inisialisasi Icon
+        lucide.createIcons();
+  </script>
 </body>
 <footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
       <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
