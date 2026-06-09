@@ -68,8 +68,8 @@
     <div class="p-6 mt-4 border-t border-gray-800">
         <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider">Social Media</p>
         <div class="flex gap-4">
-            <a href="https://instagram.com/rezamalikalhakim" target="_blank" class="text-gray-400 hover:text-pink-500 transition-colors"><i data-lucide="instagram" style="width:20px;height:20px;"></i></a>
-            <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors"><i data-lucide="facebook" style="width:20px;height:20px;"></i></a>
+            <a href="https://instagram.com/_reza1996ma_" target="_blank" class="text-gray-400 hover:text-pink-500 transition-colors"><i data-lucide="instagram" style="width:20px;height:20px;"></i></a>
+            <a href="https://facebook.com/commandcomputerservice" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors"><i data-lucide="facebook" style="width:20px;height:20px;"></i></a>
         </div>
     </div>
   </nav>
@@ -110,8 +110,9 @@
 
   <div class="max-w-7xl mx-auto px-4 mb-12">
     <div class="ad-space">
-     <i data-lucide="monitor" style="width:32px;height:32px;margin:0 auto 8px;display:block;"></i>
-     <p>Ruang Iklan - Leaderboard (728x90)</p>
+     
+Advertisement
+
     </div>
   </div>
 
@@ -120,28 +121,8 @@
       <h3 class="text-2xl font-bold">Artikel Terbaru</h3>
       <a href="artikel.html" class="text-cyan-400 text-sm hover:underline">Lihat Semua &rarr;</a>
      </div>
-     <div class="grid md:grid-cols-3 gap-6">
-      <article class="card-hover bg-[#12122a] rounded-xl overflow-hidden border border-gray-800/50">
-       <div class="p-5">
-        <span class="mono text-[10px] text-cyan-400">HARDWARE</span>
-        <h4 class="font-bold mt-2 mb-2"><a href="cara-mengatasi-komputer-mati.html" class="hover:text-cyan-400">Cara Mengatasi Komputer Mati Total</a></h4>
-        <p class="text-sm text-gray-400 mb-3">Langkah-langkah diagnosis dan solusi mulai dari memeriksa power supply hingga komponen motherboard.</p>
-       </div>
-      </article>
-      <article class="card-hover bg-[#12122a] rounded-xl overflow-hidden border border-gray-800/50">
-       <div class="p-5">
-        <span class="mono text-[10px] text-purple-400">SOFTWARE</span>
-        <h4 class="font-bold mt-2 mb-2"><a href="#" class="hover:text-purple-400">Blue Screen of Death (BSOD)</a></h4>
-        <p class="text-sm text-gray-400 mb-3">Mengupas tuntas kode error umum, penyebab, dan cara memperbaikinya secara permanen.</p>
-       </div>
-      </article>
-      <article class="card-hover bg-[#12122a] rounded-xl overflow-hidden border border-gray-800/50">
-       <div class="p-5">
-        <span class="mono text-[10px] text-amber-400">JARINGAN</span>
-        <h4 class="font-bold mt-2 mb-2"><a href="#" class="hover:text-amber-400">Troubleshooting Koneksi Lambat</a></h4>
-        <p class="text-sm text-gray-400 mb-3">Panduan dari pengaturan DNS, flush cache, hingga optimasi adapter jaringan.</p>
-       </div>
-      </article>
+     <div id="latestArticlesContainer" class="grid md:grid-cols-3 gap-6">
+        <p class="text-gray-500 text-sm">Memuat artikel terbaru...</p>
      </div>
   </section>
 
@@ -215,6 +196,78 @@
         }
 
         // Inisialisasi Icon
+        lucide.createIcons();
+  </script>
+
+  
+<script>
+        // Logika Fetch Artikel dari Firebase
+        async function loadLatestArticles() {
+            const container = document.getElementById('latestArticlesContainer');
+            const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel.json';
+
+            try {
+                const response = await fetch(firebaseUrl);
+                const data = await response.json();
+
+                if (data) {
+                    container.innerHTML = ''; // Kosongkan text loading
+                    
+                    // Ubah object Firebase menjadi array & Urutkan dari yang terbaru
+                    const articles = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    })).sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
+
+                    // Ambil 3 artikel terbaru
+                    const latestArticles = articles.slice(0, 3);
+
+                    latestArticles.forEach(article => {
+                        // Tentukan warna label sesuai kategori
+                        let catColor = 'text-cyan-400 bg-cyan-400/10';
+                        if (article.category === 'Software') catColor = 'text-purple-400 bg-purple-400/10';
+                        if (article.category === 'Jaringan') catColor = 'text-amber-400 bg-amber-400/10';
+
+                        // Potong deskripsi agar rapi (100 karakter)
+                        const shortDesc = article.content.length > 100 ? article.content.substring(0, 100) + '...' : article.content;
+
+                        // Render HTML
+                        const articleHTML = `
+                        <article class="card-hover bg-[#12122a] rounded-xl overflow-hidden border border-gray-800/50 flex flex-col">
+                            ${article.image ? `<div class="h-40 w-full overflow-hidden border-b border-gray-800/50"><img src="${article.image}" class="w-full h-full object-cover" alt="${article.title}"></div>` : ''}
+                            <div class="p-5 flex-1 flex flex-col">
+                                <div><span class="mono text-[10px] px-2 py-1 rounded ${catColor}">${article.category.toUpperCase()}</span></div>
+                                <h4 class="font-bold mt-3 mb-2"><a href="artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a></h4>
+                                <p class="text-sm text-gray-400 mb-3 flex-1">${shortDesc}</p>
+                            </div>
+                        </article>`;
+                        container.innerHTML += articleHTML;
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-gray-500 text-sm">Belum ada artikel yang dipublish.</p>';
+                }
+            } catch (error) {
+                console.error('Error memuat artikel:', error);
+                container.innerHTML = '<p class="text-red-500 text-sm">Gagal memuat artikel.</p>';
+            }
+        }
+
+        // Jalankan fungsi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', loadLatestArticles);
+
+        // Fungsi Buka/Tutup Slide Menu (bawaan file Anda)
+        function toggleMenu(forceClose) {
+            const menu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
+            if (forceClose === false || menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                menu.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
         lucide.createIcons();
   </script>
 </body>
