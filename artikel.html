@@ -39,20 +39,76 @@
     <h2 class="text-3xl font-bold mb-2 gradient-text">Artikel & Tutorial</h2>
     <p class="text-gray-400 mb-8">Panduan troubleshooting komputer lengkap dan terpercaya</p>
     
-    <div class="grid lg:grid-cols-2 gap-8">
-      <article class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50">
-        <span class="text-[10px] text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">HARDWARE</span>
-        <h3 class="text-xl font-bold mt-3 mb-3">
-            <a href="cara-mengatasi-komputer-mati.html" class="hover:text-cyan-400">Cara Mengatasi Komputer Mati Total: Panduan Lengkap dari A-Z</a>
-        </h3>
-        <p class="text-gray-400 text-sm mb-4">Komputer yang mati total bisa disebabkan berbagai faktor. Berikut langkah-langkah sistematis untuk mengidentifikasi dan memperbaiki masalah...</p>
-        <a href="cara-mengatasi-komputer-mati.html" class="text-sm text-cyan-500 hover:underline">Baca selengkapnya &rarr;</a>
-      </article>
-      
-      </div>
+    <div id="allArticlesContainer" class="grid lg:grid-cols-2 gap-8">
+      <p class="text-gray-500 text-sm">Memuat daftar artikel...</p>
+    </div>
   </section>
-  
+  <script>
+        // Fungsi Buka/Tutup Slide Menu
+        function toggleMenu(forceClose) {
+            const menu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
+            if (forceClose === false || menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                menu.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
 
+        // Inisialisasi Icon
+        lucide.createIcons();
+  </script>
+
+<script>
+        async function loadAllArticles() {
+            const container = document.getElementById('allArticlesContainer');
+            const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel.json';
+
+            try {
+                const response = await fetch(firebaseUrl);
+                const data = await response.json();
+
+                if (data) {
+                    container.innerHTML = ''; 
+                    
+                    const articles = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    })).sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
+
+                    articles.forEach(article => {
+                        let catColor = 'text-cyan-400 bg-cyan-400/10';
+                        if (article.category === 'Software') catColor = 'text-purple-400 bg-purple-400/10';
+                        if (article.category === 'Jaringan') catColor = 'text-amber-400 bg-amber-400/10';
+
+                        const shortDesc = article.content.length > 150 ? article.content.substring(0, 150) + '...' : article.content;
+
+                        const articleHTML = `
+                        <article class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50 transition hover:border-cyan-500/50">
+                            ${article.image ? `<img src="${article.image}" class="w-full h-48 object-cover rounded-lg mb-4" alt="${article.title}">` : ''}
+                            <span class="text-[10px] px-2 py-1 rounded ${catColor}">${article.category.toUpperCase()}</span>
+                            <h3 class="text-xl font-bold mt-3 mb-3">
+                                <a href="artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a>
+                            </h3>
+                            <p class="text-gray-400 text-sm mb-4">${shortDesc}</p>
+                            <a href="artikel.html?id=${article.id}" class="text-sm text-cyan-500 hover:underline">Baca selengkapnya &rarr;</a>
+                        </article>`;
+                        container.innerHTML += articleHTML;
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-gray-500 text-sm col-span-2">Belum ada artikel yang dipublish.</p>';
+                }
+            } catch (error) {
+                console.error('Error memuat artikel:', error);
+                container.innerHTML = '<p class="text-red-500 text-sm">Gagal memuat artikel.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAllArticles);
+        lucide.createIcons();
+  </script>
 </body>
 <footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
       <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
