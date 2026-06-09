@@ -40,12 +40,13 @@
     <h2 class="text-3xl font-bold mb-6 gradient-text">Tentang Kami</h2>
     
     <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50 mb-8 space-y-4 text-gray-300 leading-relaxed">
-      <p><strong>Command Computer Service</strong> adalah platform edukasi troubleshooting dan layanan servis komputer profesional yang berlokasi di Gg.Musik Desa Lebak Anyar. Kami hadir untuk memberikan solusi nyata bagi permasalahan IT di Indonesia.</p>
+      <p><strong>Command Computer Service</strong> 
+adalah tempatnya menemukan solusi dalam pemecahan masalah pada perangkat informasi dan teknologi dengan teknis perbaikan yang ahli dibidangnya sehingga perbaikan menjadi cepat, aman , dan nyaman bagi client. Jasa perbaikan ini berlokasikan di Gg.Musik Desa Lebak Anyar Kec.Pasawahan juga siap membantu dalam 24jam untuk dikunjungi kelokasi masing-masing client atau bisa dipandu menggunakan sistem remote.</p>
       <h3 class="text-xl font-bold text-white pt-4">Visi & Misi</h3>
       <ul class="list-disc list-inside space-y-2 text-gray-400">
-       <li>Menyajikan artikel troubleshooting yang komprehensif dan teruji.</li>
-       <li>Memberikan layanan perbaikan hardware dengan standar teknis tinggi.</li>
-       <li>Membangun komunitas web developer dan teknisi yang solid.</li>
+       <li>Menjadi Tenaga Ahli Dan Profesional Dalam Bidang Jasa Perbaikan Komputer</li>
+       <li>Memberikan Kepuasan Pelanggan</li>
+       <li>Menambah Pengalaman Dan Ilmu Yang Lebih Baik</li>
       </ul>
     </div>
 
@@ -56,19 +57,37 @@
        </div>
        <div class="space-y-4 text-gray-300">
         <h3 class="text-2xl font-bold text-white">Reza Malik Al Hakim</h3>
-        <p class="mono text-sm text-cyan-400">Founder, Full-Stack Web Developer & IT Specialist</p>
-        <p>Berpengalaman dalam diagnosis motherboard, optimasi sistem, pembuatan aplikasi <i>Single Page Application (SPA)</i>, dan integrasi backend modern.</p>
+        <p class="mono text-sm text-cyan-400">Profesional IT Support</p>
+        <p>+10 Tahun berpengalaman dalam diagnosis (hardware / software / jaringan)<i>komputer</i>, instalasi jaringan dan website programing.</p>
         <div class="flex flex-wrap gap-2 pt-2">
-            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full text-xs">Hardware Repair</span>
-            <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-xs">Full-Stack Dev</span>
-            <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-xs">Data Recovery</span>
+            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full text-xs">Hardware / System / Software</span>
+            <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-xs">Network & Data Base</span>
+            <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-xs">Website Developer</span>
         </div>
        </div>
       </div>
     </div>
   </section>
 
-  <footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center"><p class="text-xs text-gray-600">© 2025 Command Computer Service.</p></footer>
-  <script>lucide.createIcons();</script>
+  
+  <script>
+        // Fungsi Buka/Tutup Slide Menu
+        function toggleMenu(forceClose) {
+            const menu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
+            if (forceClose === false || menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                menu.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        // Inisialisasi Icon
+        lucide.createIcons();
+  </script>
 </body>
+<footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
+      <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
 </html>
