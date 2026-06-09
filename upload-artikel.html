@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Artikel - Command Computer Service</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
       body { background-color: #0a0a1a; color: #e5e7eb; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -15,7 +16,7 @@
 </head>
 <body class="h-full">
 
- <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
+  <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
      <div class="flex items-center gap-2">
       <button onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="menu" style="width:22px;height:22px;"></i></button>
@@ -65,40 +66,74 @@
                 <textarea id="postContent" rows="10" class="input-field" placeholder="Tulis konten artikel SEO-friendly Anda di sini (1000+ kata)..." required></textarea>
             </div>
 
-            <button type="submit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
+            <button type="submit" id="btnSubmit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
                 Publish Artikel
             </button>
+            <p id="uploadStatus" class="text-sm mt-2 hidden text-center"></p>
         </form>
     </div>
   </section>
 
   <script>
-      // Kerangka Logika JavaScript untuk integrasi ke Backend/Database
-      document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      lucide.createIcons();
+
+      document.getElementById('uploadForm').addEventListener('submit', async function(e) {
           e.preventDefault();
+          
+          const btn = document.getElementById('btnSubmit');
+          const status = document.getElementById('uploadStatus');
+          btn.textContent = 'Mempublish...';
+          btn.disabled = true;
           
           const title = document.getElementById('postTitle').value;
           const category = document.getElementById('postCategory').value;
           const content = document.getElementById('postContent').value;
           const imageFile = document.getElementById('postImage').files[0];
 
-          // Simulasi proses
-          alert(`Mencoba mengunggah: ${title}\n(Catatan: Untuk menyimpan data ini secara nyata dan memunculkannya di halaman index.html, form ini harus dikoneksikan ke sistem backend seperti Supabase, Firebase, atau REST API Anda)`);
-          
-          // Contoh Fetch API untuk ke depannya:
-          /*
-          const formData = new FormData();
-          formData.append('title', title);
-          formData.append('content', content);
-          if(imageFile) formData.append('image', imageFile);
+          // Fungsi mengubah gambar ke Base64 agar bisa disimpan di Realtime Database
+          const toBase64 = file => new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = error => reject(error);
+          });
 
-          fetch('URL_BACKEND_ANDA/api/articles', {
-              method: 'POST',
-              body: formData
-          }).then(res => res.json())
-            .then(data => alert('Berhasil!'))
-            .catch(err => console.error(err));
-          */
+          let imageBase64 = '';
+          if (imageFile) {
+              imageBase64 = await toBase64(imageFile);
+          }
+
+          const dataArtikel = {
+              title: title,
+              category: category,
+              content: content,
+              image: imageBase64,
+              waktu: new Date().toISOString()
+          };
+
+          const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel.json';
+
+          try {
+              const response = await fetch(firebaseUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(dataArtikel)
+              });
+
+              if(response.ok) {
+                  status.textContent = '✅ Artikel berhasil dipublish!';
+                  status.className = 'text-sm mt-2 text-green-400 block text-center';
+                  document.getElementById('uploadForm').reset();
+              } else {
+                  throw new Error('Gagal mempublish');
+              }
+          } catch (error) {
+              status.textContent = '❌ Terjadi kesalahan koneksi.';
+              status.className = 'text-sm mt-2 text-red-400 block text-center';
+          } finally {
+              btn.textContent = 'Publish Artikel';
+              btn.disabled = false;
+          }
       });
   </script>
 </body>
