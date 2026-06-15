@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tentang Kami - Command Computer Service</title>
+  <title>Sitemap - Command Computer Service</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -11,49 +11,159 @@
       body { background-color: #0a0a1a; color: #e5e7eb; font-family: 'Plus Jakarta Sans', sans-serif; }
       .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .mono { font-family: 'Space Mono', monospace; }
-  </style>
+      .dropdown-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+      .dropdown-content.open { max-height: 1000px; /* Cukup besar untuk menampilkan list */ }
+ /* Animasi Slide Menu */
+        .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+        .slide-menu.open { transform: translateX(0); }
+        .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.open { opacity: 1; pointer-events: all; }
+        
+        /* Utilitas Tampilan */
+        .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .ad-space { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px dashed #0f3460; border-radius: 12px; padding: 40px 20px; text-align: center; color: #4a6fa5; font-size: 14px; }
+ 
+ </style>
 </head>
-<body class="h-full">
+<body class="h-full flex flex-col min-h-screen">
+
+     <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu()"></div>
+
+  <nav id="slideMenu" class="slide-menu fixed top-0 left-0 h-full w-72 bg-[#0f0f2a] z-50 shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-gray-800">
+     <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="Logo.png" width="100%" height="100%"></div>
+       <span class="mono text-xs text-cyan-400 font-bold">Menu</span>
+      </div>
+      <button onclick="toggleMenu()" class="text-gray-400 hover:text-white"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+     </div>
+     <p class="text-xs text-gray-500 mt-1">Command Computer Service</p>
+    </div>
+    
+    <ul class="p-4 space-y-1">
+     <li><a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i data-lucide="home" style="width:14px;height:14px;color:white;"></i></div> Home</a></li>
+     <li><a href="about.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center"><i data-lucide="info" style="width:14px;height:14px;color:white;"></i></div> About & Profile</a></li>
+     <li><a href="artikel.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"><i data-lucide="file-text" style="width:14px;height:14px;color:white;"></i></div> Artikel</a></li>
+     <li><a href="service.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center"><i data-lucide="settings" style="width:14px;height:14px;color:white;"></i></div> Service</a></li>
+     <li><a href="galeri.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center"><i data-lucide="image" style="width:14px;height:14px;color:white;"></i></div> Galeri</a></li>
+     <li><a href="kontak.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center"><i data-lucide="phone" style="width:14px;height:14px;color:white;"></i></div> Kontak</a></li>
+     <li><a href="sitemap.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center"><i data-lucide="map" style="width:14px;height:14px;color:white;"></i></div> Sitemap</a></li>
+     <li><a href="termsandconditions.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center"><i data-lucide="shield" style="width:14px;height:14px;color:white;"></i></div> Terms & Conditions</a></li>
+     <li><a href="disclaimer.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center"><i data-lucide="alert-triangle" style="width:14px;height:14px;color:white;"></i></div> Disclaimer</a></li>
+    </ul>
+
+    <div class="p-6 mt-4 border-t border-gray-800">
+        <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider">Social Media</p>
+        <div class="flex gap-4">
+            <a href="https://instagram.com/_reza1996ma_" target="_blank" class="text-gray-400 hover:text-pink-500 transition-colors"><i data-lucide="instagram" style="width:20px;height:20px;"></i></a>
+            <a href="https://facebook.com/commandcomputerservice" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors"><i data-lucide="facebook" style="width:20px;height:20px;"></i></a>
+        </div>
+    </div>
+  </nav>
 
   <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
      <div class="flex items-center gap-2">
       <button onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="menu" style="width:22px;height:22px;"></i></button>
-      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="Logo.png" width="100%" height="100%"></div>
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="img/Logo.png" width="100%" height="100%"></div>
       <div>
        <a href="index.html"><h1 class="text-lg font-bold gradient-text">Command Computer Service</h1></a>
        <p class="text-[10px] text-gray-500 mono">by Reza Malik Al Hakim</p>
       </div>
      </div>
-     
-     <div class="hidden md:flex items-center gap-6 text-sm">
-        <a href="index.html" class="text-white">Home</a>
-        <a href="artikel.html" class="text-gray-400 hover:text-white transition-colors">Artikel</a>
-        <a href="service.html" class="text-gray-400 hover:text-white transition-colors">Service</a>
-        <a href="kontak.html" class="text-gray-400 hover:text-white transition-colors">Kontak</a>
-     </div>
-     <a href="kontak.html" class="hidden sm:block px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-black text-sm font-semibold rounded-lg transition-colors">Daftar Service</a>
     </div>
   </header>
 
-  <section class="max-w-4xl mx-auto px-4 py-16">
+  <main class="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">
      <h2 class="text-3xl font-bold mb-6 gradient-text">Sitemap</h2>
      <div class="bg-[#12122a] rounded-xl p-8 border border-gray-800/50">
-      <ul class="space-y-3 text-sm text-cyan-400">
-       <li><a href="index.html" class="hover:underline">→ Home</a></li>
-       <li><a href="about.html" class="hover:underline">→ About & Profile</a></li>
-       <li><a href="artikel.html" class="hover:underline">→ Artikel & Tutorial</a></li>
-       <li><a href="service.html" class="hover:underline">→ Service / Layanan</a></li>
-       <li><a href="galeri.html" class="hover:underline">→ Galeri</a></li>
-       <li><a href="kontak.html" class="hover:underline">→ Kontak</a></li>
-       <li><a href="termsandconditions.html" class="hover:underline">→ Terms & Conditions</a></li>
-       <li><a href="disclaimer.html" class="hover:underline">→ Disclaimer</a></li>
+      <ul class="space-y-4 text-sm text-cyan-400">
+       <li><a href="index.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Home</a></li>
+       <li><a href="about.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> About & Profile</a></li>
+       
+       <li class="pl-0">
+           <button onclick="toggleArticleDropdown()" class="flex items-center gap-2 w-full text-left hover:underline focus:outline-none">
+               <i data-lucide="chevron-down" id="iconDropdown" class="w-4 h-4 transition-transform duration-300"></i>
+               Artikel & Tutorial
+           </button>
+           <ul id="articleDropdown" class="dropdown-content pl-6 mt-2 space-y-2 border-l border-gray-700 ml-2">
+               <li class="text-gray-500 italic text-xs">Memuat data artikel...</li>
+           </ul>
+       </li>
+
+       <li><a href="service.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Service / Layanan</a></li>
+       <li><a href="galeri.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Galeri</a></li>
+       <li><a href="kontak.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Kontak</a></li>
+       <li><a href="termsandconditions.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Terms & Conditions</a></li>
+       <li><a href="disclaimer.html" class="hover:underline flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Disclaimer</a></li>
       </ul>
      </div>
-  </section>
+  </main>
 
  <script>
-        // Fungsi Buka/Tutup Slide Menu
+        lucide.createIcons();
+        function toggleMenu() {}
+
+        // Fungsi Dropdown
+        function toggleArticleDropdown() {
+            const dropdown = document.getElementById('articleDropdown');
+            const icon = document.getElementById('iconDropdown');
+            dropdown.classList.toggle('open');
+            if(dropdown.classList.contains('open')) {
+                icon.style.transform = "rotate(-180deg)";
+            } else {
+                icon.style.transform = "rotate(0deg)";
+            }
+        }
+
+        // Fetch Artikel untuk Sitemap
+        async function fetchSitemapArticles() {
+            const container = document.getElementById('articleDropdown');
+            const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel.json';
+
+            try {
+                const response = await fetch(firebaseUrl);
+                const data = await response.json();
+                container.innerHTML = ''; // Kosongkan text loading
+
+                if (data) {
+                    const articles = Object.keys(data).map(key => ({ id: key, ...data[key] })).sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
+                    
+                    // Tambahkan Main Link
+                    container.innerHTML += `<li><a href="artikel.html" class="text-gray-300 hover:text-cyan-400 font-bold block py-1">Semua Artikel &rarr;</a></li>`;
+
+                    articles.forEach(article => {
+                        container.innerHTML += `
+                            <li>
+                                <a href="artikel.html?id=${article.id}" class="text-gray-400 hover:text-cyan-300 hover:underline block py-1 line-clamp-1">
+                                    - ${article.title}
+                                </a>
+                            </li>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<li class="text-gray-500">Belum ada artikel.</li>';
+                }
+            } catch (error) {
+                container.innerHTML = '<li class="text-red-500">Gagal memuat sitemap artikel.</li>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchSitemapArticles);
+
+         // Fungsi Buka/Tutup Slide Menu
         function toggleMenu(forceClose) {
             const menu = document.getElementById('slideMenu');
             const overlay = document.getElementById('overlay');
@@ -69,8 +179,9 @@
         // Inisialisasi Icon
         lucide.createIcons();
   </script>
-</body>
-<footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
+  
+  <footer class="bg-[#060612] border-t border-gray-800/50 py-6 mt-auto text-center">
       <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
   </footer>
+</body>
 </html>
