@@ -20,7 +20,7 @@
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
      <div class="flex items-center gap-2">
       <button onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="menu" style="width:22px;height:22px;"></i></button>
-      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="Logo.png" width="100%" height="100%"></div>
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm"><img src="img/Logo.png" width="100%" height="100%" alt="Logo"></div>
       <div>
        <a href="index.html"><h1 class="text-lg font-bold gradient-text">Command Computer Service</h1></a>
        <p class="text-[10px] text-gray-500 mono">by Reza Malik Al Hakim</p>
@@ -57,13 +57,13 @@
             </div>
 
             <div>
-                <label class="text-sm text-gray-400">Gambar Thumbnail</label>
-                <input type="file" id="postImage" accept="image/*" class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400">
+                <label class="text-sm text-gray-400">Gambar (Bisa pilih lebih dari 1 file)</label>
+                <input type="file" id="postImage" accept="image/*" multiple class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400">
             </div>
 
             <div>
-                <label class="text-sm text-gray-400">Isi Artikel (Mendukung tag HTML dasar)</label>
-                <textarea id="postContent" rows="10" class="input-field" placeholder="Tulis konten artikel SEO-friendly Anda di sini (1000+ kata)..." required></textarea>
+                <label class="text-sm text-gray-400">Isi Artikel</label>
+                <textarea id="postContent" rows="10" class="input-field" placeholder="Tulis konten artikel SEO-friendly Anda di sini..." required></textarea>
             </div>
 
             <button type="submit" id="btnSubmit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
@@ -76,6 +76,7 @@
 
   <script>
       lucide.createIcons();
+      function toggleMenu() {} // Placeholder untuk slide menu jika ada
 
       document.getElementById('uploadForm').addEventListener('submit', async function(e) {
           e.preventDefault();
@@ -88,9 +89,8 @@
           const title = document.getElementById('postTitle').value;
           const category = document.getElementById('postCategory').value;
           const content = document.getElementById('postContent').value;
-          const imageFile = document.getElementById('postImage').files[0];
+          const imageFiles = document.getElementById('postImage').files;
 
-          // Fungsi mengubah gambar ke Base64 agar bisa disimpan di Realtime Database
           const toBase64 = file => new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.readAsDataURL(file);
@@ -98,16 +98,20 @@
               reader.onerror = error => reject(error);
           });
 
-          let imageBase64 = '';
-          if (imageFile) {
-              imageBase64 = await toBase64(imageFile);
+          // Proses semua gambar yang diunggah
+          let imagesBase64 = [];
+          if (imageFiles.length > 0) {
+              for(let i = 0; i < imageFiles.length; i++) {
+                  let b64 = await toBase64(imageFiles[i]);
+                  imagesBase64.push(b64);
+              }
           }
 
           const dataArtikel = {
               title: title,
               category: category,
               content: content,
-              image: imageBase64,
+              images: imagesBase64, // Simpan sebagai array
               waktu: new Date().toISOString()
           };
 
