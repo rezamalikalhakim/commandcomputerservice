@@ -46,7 +46,10 @@
 
   <section class="max-w-3xl mx-auto px-4 py-12">
     <div class="bg-[#12122a] p-8 rounded-xl border border-gray-800/50">
-        <h2 class="text-2xl font-bold mb-6 text-white">Upload Artikel Baru</h2>
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="formTitle" class="text-2xl font-bold text-white">Upload Artikel Baru</h2>
+            <button type="button" id="btnCancelEdit" onclick="cancelEdit()" class="hidden text-sm text-red-400 hover:text-red-300 underline">Batal Edit</button>
+        </div>
         
         <form id="uploadForm" class="space-y-6">
             <div>
@@ -64,7 +67,7 @@
             </div>
 
             <div>
-                <label class="text-sm text-gray-400">Gambar Utama Banner (Bisa pilih lebih dari 1 file)</label>
+                <label class="text-sm text-gray-400">Gambar Utama Banner (Biarkan kosong jika tidak ingin mengubah foto saat Edit)</label>
                 <input type="file" id="postImage" accept="image/*" multiple class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400">
             </div>
 
@@ -100,7 +103,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
                 <h2 class="text-xl font-bold text-white">Monitoring Riwayat Artikel</h2>
-                <p class="text-xs text-gray-400 mt-1">Pantau performa statistik kunjungan dan manajemen penghapusan data artikel.</p>
+                <p class="text-xs text-gray-400 mt-1">Pantau performa statistik kunjungan, edit, dan manajemen penghapusan.</p>
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" id="btnResetNotif" onclick="resetNotification()" class="px-3 py-2 border border-gray-700 hover:bg-gray-800 text-gray-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
@@ -124,8 +127,8 @@
                         <th class="py-3 px-4">Judul Artikel</th>
                         <th class="py-3 px-4 w-28">Kategori</th>
                         <th class="py-3 px-4 w-44">Waktu Upload</th>
-                        <th class="py-3 px-4 w-32 text-center">Viewer / Clicks</th>
-                        <th class="py-3 px-4 w-20 text-center">Aksi</th>
+                        <th class="py-3 px-4 w-32 text-center">Viewer</th>
+                        <th class="py-3 px-4 w-24 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="articleTableBody" class="divide-y divide-gray-800 text-sm">
@@ -139,7 +142,10 @@
   </section>
 
   <script>
-      const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel.json';
+      const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel';
+      
+      let currentEditId = null; // Menyimpan ID artikel yang sedang di-edit
+      let articlesData = {}; // Menyimpan data sementara untuk fungsi edit
 
       // Initialize Icons
       lucide.createIcons();
@@ -165,7 +171,7 @@
                   document.execCommand('insertHTML', false, imgHtml);
               };
               reader.readAsDataURL(file);
-              input.value = ''; // Reset input agar file yang sama bisa dipilih kembali
+              input.value = ''; 
           }
       }
 
@@ -179,10 +185,11 @@
           selectAllBox.checked = false;
 
           try {
-              const response = await fetch(firebaseUrl);
+              const response = await fetch(`${firebaseUrl}.json`);
               if(!response.ok) throw new Error('Gagal mengambil data database');
               const data = await response.json();
-
+              
+              articlesData = data || {}; // Simpan ke variabel global agar mudah ditarik saat edit
               tbody.innerHTML = '';
 
               if (!data || Object.keys(data).length === 0) {
@@ -195,7 +202,6 @@
               const sortedArticles = Object.entries(data).sort((a, b) => new Date(b[1].waktu) - new Date(a[1].waktu));
 
               sortedArticles.forEach(([id, art]) => {
-                  // Fallback jika views/clicks belum terdefinisi di database default ke 0
                   const viewerCount = art.views || art.clicks || 0;
                   
                   // Format Waktu Indo
@@ -214,7 +220,10 @@
                       <td class="py-3.5 px-4"><span class="px-2 py-0.5 text-xs rounded-full bg-gray-800 text-gray-300 border border-gray-700">${art.category}</span></td>
                       <td class="py-3.5 px-4 text-gray-400 text-xs">${uploadTime}</td>
                       <td class="py-3.5 px-4 text-center text-cyan-400 font-bold">${viewerCount}</td>
-                      <td class="py-3.5 px-4 text-center">
+                      <td class="py-3.5 px-4 text-center flex items-center justify-center gap-1">
+                          <button type="button" onclick="prepareEdit('${id}')" class="p-1.5 hover:bg-yellow-950/50 hover:text-yellow-400 rounded transition-colors text-gray-500" title="Edit Artikel">
+                              <i data-lucide="edit" class="w-4 h-4 mx-auto"></i>
+                          </button>
                           <button type="button" onclick="deleteSingleArticle('${id}')" class="p-1.5 hover:bg-red-950/50 hover:text-red-400 rounded transition-colors text-gray-500" title="Hapus Artikel">
                               <i data-lucide="trash" class="w-4 h-4 mx-auto"></i>
                           </button>
@@ -229,6 +238,45 @@
           } catch (error) {
               tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400">❌ Gagal memuat riwayat artikel. Periksa koneksi internet Anda.</td></tr>';
           }
+      }
+
+      // --- LOGIC PERSIAPAN EDIT ARTIKEL ---
+      function prepareEdit(id) {
+          const article = articlesData[id];
+          if (!article) return;
+
+          currentEditId = id;
+          
+          // Isi form dengan data lama
+          document.getElementById('postTitle').value = article.title;
+          document.getElementById('postCategory').value = article.category;
+          document.getElementById('postContent').innerHTML = article.content || '';
+          
+          // Ubah tampilan UI Form
+          document.getElementById('formTitle').textContent = 'Edit Artikel';
+          document.getElementById('btnSubmit').textContent = 'Update Artikel';
+          document.getElementById('btnSubmit').classList.replace('from-cyan-500', 'from-yellow-500');
+          document.getElementById('btnSubmit').classList.replace('to-blue-600', 'to-orange-600');
+          document.getElementById('btnCancelEdit').classList.remove('hidden');
+
+          // Scroll otomatis ke atas (ke arah form)
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // --- BATALKAN EDIT ---
+      function cancelEdit() {
+          currentEditId = null;
+          
+          // Kosongkan form
+          document.getElementById('uploadForm').reset();
+          document.getElementById('postContent').innerHTML = '';
+          
+          // Kembalikan tampilan UI Form seperti semula
+          document.getElementById('formTitle').textContent = 'Upload Artikel Baru';
+          document.getElementById('btnSubmit').textContent = 'Publish Artikel';
+          document.getElementById('btnSubmit').classList.replace('from-yellow-500', 'from-cyan-500');
+          document.getElementById('btnSubmit').classList.replace('to-orange-600', 'to-blue-600');
+          document.getElementById('btnCancelEdit').classList.add('hidden');
       }
 
       // --- LOGIC CHECKBOX & BULK SELECTION ---
@@ -272,7 +320,7 @@
           if(!confirm('Apakah Anda yakin ingin menghapus artikel ini?')) return;
           
           const tableStatus = document.getElementById('tableStatus');
-          const singleDeleteUrl = `https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel/${id}.json`;
+          const singleDeleteUrl = `${firebaseUrl}/${id}.json`;
 
           try {
               const response = await fetch(singleDeleteUrl, { method: 'DELETE' });
@@ -297,12 +345,12 @@
           if(!confirm(`Apakah Anda yakin ingin menghapus ${checkedBoxes.length} artikel yang terpilih?`)) return;
 
           const tableStatus = document.getElementById('tableStatus');
-          tableStatus.textContent = 'Sedang menghapus data terpilh...';
+          tableStatus.textContent = 'Sedang menghapus data terpilih...';
           tableStatus.className = 'text-sm mb-4 block text-center p-2 rounded bg-yellow-950/40 text-yellow-400 border border-yellow-900';
 
           const deletePromises = Array.from(checkedBoxes).map(cb => {
               const id = cb.value;
-              const deleteUrl = `https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel/${id}.json`;
+              const deleteUrl = `${firebaseUrl}/${id}.json`;
               return fetch(deleteUrl, { method: 'DELETE' });
           });
 
@@ -318,22 +366,23 @@
           }
       }
 
-      // --- EVENT SUBMIT FORM UPLOAD ARTIKEL ---
+      // --- EVENT SUBMIT FORM (UPLOAD BARU / UPDATE EDIT) ---
       document.getElementById('uploadForm').addEventListener('submit', async function(e) {
           e.preventDefault();
           
           const btn = document.getElementById('btnSubmit');
           const status = document.getElementById('uploadStatus');
-          btn.textContent = 'Mempublish...';
+          
+          // Loading state
+          btn.textContent = currentEditId ? 'Memperbarui...' : 'Mempublish...';
           btn.disabled = true;
           
           const title = document.getElementById('postTitle').value;
           const category = document.getElementById('postCategory').value;
-          
-          // Mengambil konten HTML dari Rich Text Editor (bukan textarea .value lagi)
           const content = document.getElementById('postContent').innerHTML;
           const imageFiles = document.getElementById('postImage').files;
 
+          // Utility convert image to Base64
           const toBase64 = file => new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.readAsDataURL(file);
@@ -341,7 +390,7 @@
               reader.onerror = error => reject(error);
           });
 
-          // Proses upload file banner utama
+          // Proses gambar jika ada file yang dipilih
           let imagesBase64 = [];
           if (imageFiles.length > 0) {
               for(let i = 0; i < imageFiles.length; i++) {
@@ -350,41 +399,61 @@
               }
           }
 
+          // Object payload data
           const dataArtikel = {
               title: title,
               category: category,
               content: content,
-              images: imagesBase64,
-              waktu: new Date().toISOString(),
-              views: 0 // Inisialisasi hitungan viewer default awal
+              waktu: new Date().toISOString() // Selalu perbarui waktu saat di-edit
           };
 
+          // Tentukan Method & URL (Apakah ini Edit atau Upload Baru?)
+          let targetUrl = `${firebaseUrl}.json`;
+          let httpMethod = 'POST'; // Default adalah Upload Baru
+
+          if (currentEditId) {
+              // Jika mode Edit, gunakan PATCH untuk mengupdate data lama (tidak menimpa views)
+              targetUrl = `${firebaseUrl}/${currentEditId}.json`;
+              httpMethod = 'PATCH';
+              
+              // Hanya update gambar JIKA user memasukkan gambar baru di form edit
+              if (imagesBase64.length > 0) {
+                  dataArtikel.images = imagesBase64;
+              }
+          } else {
+              // Jika Upload Baru
+              dataArtikel.images = imagesBase64;
+              dataArtikel.views = 0; // Default view untuk artikel baru
+          }
+
           try {
-              const response = await fetch(firebaseUrl, {
-                  method: 'POST',
+              const response = await fetch(targetUrl, {
+                  method: httpMethod,
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(dataArtikel)
               });
 
               if(response.ok) {
-                  status.textContent = '✅ Artikel berhasil dipublish!';
+                  status.textContent = currentEditId ? '✅ Artikel berhasil diperbarui!' : '✅ Artikel berhasil dipublish!';
                   status.className = 'text-sm mt-2 text-green-400 block text-center';
                   
-                  // Reset form dan editor area
-                  document.getElementById('uploadForm').reset();
-                  document.getElementById('postContent').innerHTML = '';
+                  // Keluar dari mode edit (akan mereset form juga)
+                  cancelEdit(); 
                   
-                  // Refresh tabel riwayat otomatis
+                  // Refresh tabel
                   fetchArticles();
               } else {
-                  throw new Error('Gagal mempublish');
+                  throw new Error('Gagal memproses data');
               }
           } catch (error) {
-              status.textContent = '❌ Terjadi kesalahan koneksi.';
+              status.textContent = '❌ Terjadi kesalahan koneksi database.';
               status.className = 'text-sm mt-2 text-red-400 block text-center';
           } finally {
-              btn.textContent = 'Publish Artikel';
-              btn.disabled = false;
+              // Kembalikan tombol seperti semula jika error (jika sukses sudah di-handle oleh cancelEdit)
+              if(btn.disabled) {
+                 btn.textContent = currentEditId ? 'Update Artikel' : 'Publish Artikel';
+                 btn.disabled = false;
+              }
           }
       });
   </script>
