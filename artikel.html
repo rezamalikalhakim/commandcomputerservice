@@ -104,7 +104,6 @@
   </section>
   
   <script>
-        // Fungsi Buka/Tutup Slide Menu
         function toggleMenu(forceClose) {
             const menu = document.getElementById('slideMenu');
             const overlay = document.getElementById('overlay');
@@ -116,8 +115,6 @@
                 overlay.classList.add('open');
             }
         }
-
-        // Inisialisasi Icon
         lucide.createIcons();
   </script>
 
@@ -143,26 +140,43 @@
                         if (article.category === 'Software') catColor = 'text-purple-400 bg-purple-400/10';
                         if (article.category === 'Jaringan') catColor = 'text-amber-400 bg-amber-400/10';
 
-                        // Memperbaiki rendering tag HTML pada cuplikan deskripsi
+                        // Ambil teks murni untuk deskripsi singkat agar tag HTML dari editor tidak merusak struktur
                         const tempDiv = document.createElement("div");
                         tempDiv.innerHTML = article.content || '';
                         const plainText = tempDiv.textContent || tempDiv.innerText || "";
                         const shortDesc = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
 
-                        // Memperbaiki referensi array image
-                        const bannerImg = (article.images && article.images.length > 0) ? article.images[0] : (article.image ? article.image : '');
+                        // Ekstraksi thumbnail secara aman (Mendukung tipe data Array maupun Object bawaan Firebase)
+                        let bannerImg = '';
+                        if (article.images) {
+                            if (Array.isArray(article.images) && article.images.length > 0) {
+                                bannerImg = article.images[0];
+                            } else if (typeof article.images === 'object') {
+                                const keys = Object.keys(article.images);
+                                if (keys.length > 0) {
+                                    bannerImg = article.images[keys[0]];
+                                }
+                            }
+                        }
+                        if (!bannerImg && article.image) {
+                            bannerImg = article.image;
+                        }
 
                         const articleHTML = `
-                        <article class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50 transition hover:border-cyan-500/50">
-                            ${bannerImg ? `<img src="${bannerImg}" class="w-full h-48 object-cover rounded-lg mb-4" alt="${article.title}">` : ''}
-                            <span class="text-[10px] px-2 py-1 rounded ${catColor}">${article.category.toUpperCase()}</span>
-                            <h3 class="text-xl font-bold mt-3 mb-3">
-                                <a href="baca-artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a>
-                            </h3>
-                            <p class="text-gray-400 text-sm mb-4">${shortDesc}</p>
-                            <a href="baca-artikel.html?id=${article.id}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                                  Baca selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                              </a>
+                        <article class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50 transition hover:border-cyan-500/50 card-hover flex flex-col justify-between">
+                            <div>
+                                ${bannerImg ? `<img src="${bannerImg}" class="w-full h-48 object-cover rounded-lg mb-4 border border-gray-800/30 shadow-md" alt="${article.title}" onerror="this.style.display='none'">` : ''}
+                                <span class="text-[10px] px-2 py-1 rounded ${catColor}">${article.category.toUpperCase()}</span>
+                                <h3 class="text-xl font-bold mt-3 mb-3">
+                                    <a href="baca-artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a>
+                                </h3>
+                                <p class="text-gray-400 text-sm mb-4">${shortDesc}</p>
+                            </div>
+                            <div class="mt-2">
+                                <a href="baca-artikel.html?id=${article.id}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                                    Baca selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
                         </article>`;
                         container.innerHTML += articleHTML;
                     });
