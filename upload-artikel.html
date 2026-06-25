@@ -144,14 +144,12 @@
   <script>
       const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel';
       
-      let currentEditId = null; // Menyimpan ID artikel yang sedang di-edit
-      let articlesData = {}; // Menyimpan data sementara untuk fungsi edit
+      let currentEditId = null; 
+      let articlesData = {}; 
 
-      // Initialize Icons
       lucide.createIcons();
       function toggleMenu() {} 
 
-      // --- SCRIPT UTILIY RICH TEXT EDITOR ---
       function formatDoc(cmd, value = null) {
           document.execCommand(cmd, false, value);
           document.getElementById('postContent').focus();
@@ -175,10 +173,8 @@
           }
       }
 
-      // --- LIFECYCLE: LOAD DATA KETIKA HALAMAN DIBUKA ---
       document.addEventListener('DOMContentLoaded', fetchArticles);
 
-      // --- FUNCTION FETCH & RENDER TABEL MONITORING ---
       async function fetchArticles() {
           const tbody = document.getElementById('articleTableBody');
           const selectAllBox = document.getElementById('selectAllCheckbox');
@@ -189,7 +185,7 @@
               if(!response.ok) throw new Error('Gagal mengambil data database');
               const data = await response.json();
               
-              articlesData = data || {}; // Simpan ke variabel global agar mudah ditarik saat edit
+              articlesData = data || {}; 
               tbody.innerHTML = '';
 
               if (!data || Object.keys(data).length === 0) {
@@ -198,13 +194,11 @@
                   return;
               }
 
-              // Mapping data Firebase & mengurutkannya berdasarkan tanggal terbaru
               const sortedArticles = Object.entries(data).sort((a, b) => new Date(b[1].waktu) - new Date(a[1].waktu));
 
               sortedArticles.forEach(([id, art]) => {
                   const viewerCount = art.views || art.clicks || 0;
                   
-                  // Format Waktu Indo
                   const uploadTime = new Date(art.waktu).toLocaleString('id-ID', {
                       dateStyle: 'medium',
                       timeStyle: 'short'
@@ -240,38 +234,31 @@
           }
       }
 
-      // --- LOGIC PERSIAPAN EDIT ARTIKEL ---
       function prepareEdit(id) {
           const article = articlesData[id];
           if (!article) return;
 
           currentEditId = id;
           
-          // Isi form dengan data lama
           document.getElementById('postTitle').value = article.title;
           document.getElementById('postCategory').value = article.category;
           document.getElementById('postContent').innerHTML = article.content || '';
           
-          // Ubah tampilan UI Form
           document.getElementById('formTitle').textContent = 'Edit Artikel';
           document.getElementById('btnSubmit').textContent = 'Update Artikel';
           document.getElementById('btnSubmit').classList.replace('from-cyan-500', 'from-yellow-500');
           document.getElementById('btnSubmit').classList.replace('to-blue-600', 'to-orange-600');
           document.getElementById('btnCancelEdit').classList.remove('hidden');
 
-          // Scroll otomatis ke atas (ke arah form)
           window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // --- BATALKAN EDIT ---
       function cancelEdit() {
           currentEditId = null;
           
-          // Kosongkan form
           document.getElementById('uploadForm').reset();
           document.getElementById('postContent').innerHTML = '';
           
-          // Kembalikan tampilan UI Form seperti semula
           document.getElementById('formTitle').textContent = 'Upload Artikel Baru';
           document.getElementById('btnSubmit').textContent = 'Publish Artikel';
           document.getElementById('btnSubmit').classList.replace('from-yellow-500', 'from-cyan-500');
@@ -279,7 +266,6 @@
           document.getElementById('btnCancelEdit').classList.add('hidden');
       }
 
-      // --- LOGIC CHECKBOX & BULK SELECTION ---
       function toggleSelectAll(master) {
           const checkboxes = document.querySelectorAll('.article-checkbox');
           checkboxes.forEach(cb => cb.checked = master.checked);
@@ -303,7 +289,6 @@
           }
       }
 
-      // --- RESET NOTIFIKASI STATUS ---
       function resetNotification() {
           const uploadStatus = document.getElementById('uploadStatus');
           const tableStatus = document.getElementById('tableStatus');
@@ -315,7 +300,6 @@
           tableStatus.textContent = '';
       }
 
-      // --- PROSES ACTION HAPUS SATUAN ---
       async function deleteSingleArticle(id) {
           if(!confirm('Apakah Anda yakin ingin menghapus artikel ini?')) return;
           
@@ -337,7 +321,6 @@
           }
       }
 
-      // --- PROSES ACTION HAPUS MASSAL (CHECKBOX) ---
       async function deleteSelectedArticles() {
           const checkedBoxes = document.querySelectorAll('.article-checkbox:checked');
           if(checkedBoxes.length === 0) return;
@@ -366,14 +349,12 @@
           }
       }
 
-      // --- EVENT SUBMIT FORM (UPLOAD BARU / UPDATE EDIT) ---
       document.getElementById('uploadForm').addEventListener('submit', async function(e) {
           e.preventDefault();
           
           const btn = document.getElementById('btnSubmit');
           const status = document.getElementById('uploadStatus');
           
-          // Loading state
           btn.textContent = currentEditId ? 'Memperbarui...' : 'Mempublish...';
           btn.disabled = true;
           
@@ -382,7 +363,6 @@
           const content = document.getElementById('postContent').innerHTML;
           const imageFiles = document.getElementById('postImage').files;
 
-          // Utility convert image to Base64
           const toBase64 = file => new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.readAsDataURL(file);
@@ -390,7 +370,6 @@
               reader.onerror = error => reject(error);
           });
 
-          // Proses gambar jika ada file yang dipilih
           let imagesBase64 = [];
           if (imageFiles.length > 0) {
               for(let i = 0; i < imageFiles.length; i++) {
@@ -399,31 +378,26 @@
               }
           }
 
-          // Object payload data
           const dataArtikel = {
               title: title,
               category: category,
               content: content,
-              waktu: new Date().toISOString() // Selalu perbarui waktu saat di-edit
+              waktu: new Date().toISOString() 
           };
 
-          // Tentukan Method & URL (Apakah ini Edit atau Upload Baru?)
           let targetUrl = `${firebaseUrl}.json`;
-          let httpMethod = 'POST'; // Default adalah Upload Baru
+          let httpMethod = 'POST'; 
 
           if (currentEditId) {
-              // Jika mode Edit, gunakan PATCH untuk mengupdate data lama (tidak menimpa views)
               targetUrl = `${firebaseUrl}/${currentEditId}.json`;
               httpMethod = 'PATCH';
               
-              // Hanya update gambar JIKA user memasukkan gambar baru di form edit
               if (imagesBase64.length > 0) {
                   dataArtikel.images = imagesBase64;
               }
           } else {
-              // Jika Upload Baru
               dataArtikel.images = imagesBase64;
-              dataArtikel.views = 0; // Default view untuk artikel baru
+              dataArtikel.views = 0; 
           }
 
           try {
@@ -437,10 +411,7 @@
                   status.textContent = currentEditId ? '✅ Artikel berhasil diperbarui!' : '✅ Artikel berhasil dipublish!';
                   status.className = 'text-sm mt-2 text-green-400 block text-center';
                   
-                  // Keluar dari mode edit (akan mereset form juga)
                   cancelEdit(); 
-                  
-                  // Refresh tabel
                   fetchArticles();
               } else {
                   throw new Error('Gagal memproses data');
@@ -449,7 +420,6 @@
               status.textContent = '❌ Terjadi kesalahan koneksi database.';
               status.className = 'text-sm mt-2 text-red-400 block text-center';
           } finally {
-              // Kembalikan tombol seperti semula jika error (jika sukses sudah di-handle oleh cancelEdit)
               if(btn.disabled) {
                  btn.textContent = currentEditId ? 'Update Artikel' : 'Publish Artikel';
                  btn.disabled = false;
