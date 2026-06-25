@@ -10,27 +10,26 @@
   <style>
       body { background-color: #0a0a1a; color: #e5e7eb; font-family: 'Plus Jakarta Sans', sans-serif; }
       .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-   * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .mono { font-family: 'Space Mono', monospace; }
-        html, body { height: 100%; margin: 0; background-color: #0a0a1a; color: #e5e7eb; overflow-x: hidden; }
+      * { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .mono { font-family: 'Space Mono', monospace; }
+      html, body { height: 100%; margin: 0; background-color: #0a0a1a; color: #e5e7eb; overflow-x: hidden; }
         
-        /* Animasi Slide Menu */
-        .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
-        .slide-menu.open { transform: translateX(0); }
-        .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .overlay.open { opacity: 1; pointer-events: all; }
+      /* Animasi Slide Menu */
+      .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .slide-menu.open { transform: translateX(0); }
+      .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+      .overlay.open { opacity: 1; pointer-events: all; }
         
-        /* Utilitas Tampilan */
-        .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .ad-space { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px dashed #0f3460; border-radius: 12px; padding: 40px 20px; text-align: center; color: #4a6fa5; font-size: 14px; }
-  
+      /* Utilitas Tampilan */
+      .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .card-hover { transition: all 0.3s ease; }
+      .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+      .ad-space { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px dashed #0f3460; border-radius: 12px; padding: 40px 20px; text-align: center; color: #4a6fa5; font-size: 14px; }
   </style>
 </head>
 <body class="h-full">
 
-     <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu()"></div>
+  <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu()"></div>
 
   <nav id="slideMenu" class="slide-menu fixed top-0 left-0 h-full w-72 bg-[#0f0f2a] z-50 shadow-2xl overflow-y-auto">
     <div class="p-6 border-b border-gray-800">
@@ -103,6 +102,7 @@
       <p class="text-gray-500 text-sm">Memuat daftar artikel...</p>
     </div>
   </section>
+  
   <script>
         // Fungsi Buka/Tutup Slide Menu
         function toggleMenu(forceClose) {
@@ -121,7 +121,7 @@
         lucide.createIcons();
   </script>
 
-<script>
+  <script>
         async function loadAllArticles() {
             const container = document.getElementById('allArticlesContainer');
             const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/artikel.json';
@@ -143,17 +143,24 @@
                         if (article.category === 'Software') catColor = 'text-purple-400 bg-purple-400/10';
                         if (article.category === 'Jaringan') catColor = 'text-amber-400 bg-amber-400/10';
 
-                        const shortDesc = article.content.length > 150 ? article.content.substring(0, 150) + '...' : article.content;
+                        // Memperbaiki rendering tag HTML pada cuplikan deskripsi
+                        const tempDiv = document.createElement("div");
+                        tempDiv.innerHTML = article.content || '';
+                        const plainText = tempDiv.textContent || tempDiv.innerText || "";
+                        const shortDesc = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+
+                        // Memperbaiki referensi array image
+                        const bannerImg = (article.images && article.images.length > 0) ? article.images[0] : (article.image ? article.image : '');
 
                         const articleHTML = `
                         <article class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50 transition hover:border-cyan-500/50">
-                            ${article.image ? `<img src="${article.image}" class="w-full h-48 object-cover rounded-lg mb-4" alt="${article.title}">` : ''}
+                            ${bannerImg ? `<img src="${bannerImg}" class="w-full h-48 object-cover rounded-lg mb-4" alt="${article.title}">` : ''}
                             <span class="text-[10px] px-2 py-1 rounded ${catColor}">${article.category.toUpperCase()}</span>
                             <h3 class="text-xl font-bold mt-3 mb-3">
-                                <a href="artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a>
+                                <a href="baca-artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a>
                             </h3>
                             <p class="text-gray-400 text-sm mb-4">${shortDesc}</p>
-                            <a href="baca-artikel.html?id=${id}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                            <a href="baca-artikel.html?id=${article.id}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
                                   Baca selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
                               </a>
                         </article>`;
@@ -166,29 +173,14 @@
                 console.error('Error memuat artikel:', error);
                 container.innerHTML = '<p class="text-red-500 text-sm">Gagal memuat artikel.</p>';
             }
+            lucide.createIcons();
         }
 
         document.addEventListener('DOMContentLoaded', loadAllArticles);
-        lucide.createIcons();
-
-        // Fungsi Buka/Tutup Slide Menu (bawaan file Anda)
-        function toggleMenu(forceClose) {
-            const menu = document.getElementById('slideMenu');
-            const overlay = document.getElementById('overlay');
-            if (forceClose === false || menu.classList.contains('open')) {
-                menu.classList.remove('open');
-                overlay.classList.remove('open');
-            } else {
-                menu.classList.add('open');
-                overlay.classList.add('open');
-            }
-        }
-
-        lucide.createIcons();
   </script>
 
-</body>
-<footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
+  <footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center text-align-center">
       <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
   </footer>
+</body>
 </html>
