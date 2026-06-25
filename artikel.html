@@ -140,32 +140,51 @@
                         if (article.category === 'Software') catColor = 'text-purple-400 bg-purple-400/10';
                         if (article.category === 'Jaringan') catColor = 'text-amber-400 bg-amber-400/10';
 
-                        // Ambil teks murni untuk deskripsi singkat agar tag HTML dari editor tidak merusak struktur
+                        // Mengambil teks murni untuk deskripsi
                         const tempDiv = document.createElement("div");
                         tempDiv.innerHTML = article.content || '';
                         const plainText = tempDiv.textContent || tempDiv.innerText || "";
                         const shortDesc = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
 
-                        // Ekstraksi thumbnail secara aman (Mendukung tipe data Array maupun Object bawaan Firebase)
+                        // ==========================================
+                        // FITUR BARU: 3 LAPIS PENCARIAN GAMBAR AMAN
+                        // ==========================================
                         let bannerImg = '';
+                        
+                        // Lapis 1: Coba ambil dari data 'images' (Struktur baru dari upload-artikel)
                         if (article.images) {
-                            if (Array.isArray(article.images) && article.images.length > 0) {
-                                bannerImg = article.images[0];
-                            } else if (typeof article.images === 'object') {
-                                const keys = Object.keys(article.images);
-                                if (keys.length > 0) {
-                                    bannerImg = article.images[keys[0]];
-                                }
+                            // Firebase kadang menyimpan array sebagai object (contoh: { "0": "data:image..." })
+                            const imgArray = Array.isArray(article.images) ? article.images : Object.values(article.images);
+                            if (imgArray.length > 0 && typeof imgArray[0] === 'string') {
+                                bannerImg = imgArray[0];
                             }
                         }
-                        if (!bannerImg && article.image) {
+                        
+                        // Lapis 2: Coba ambil dari data 'image' (Struktur lama/cadangan)
+                        if (!bannerImg && article.image && typeof article.image === 'string') {
                             bannerImg = article.image;
                         }
+
+                        // Lapis 3: Ekstrak gambar pertama dari dalam ISI Teks Artikel
+                        if (!bannerImg) {
+                            const firstImgInText = tempDiv.querySelector('img');
+                            if (firstImgInText && firstImgInText.src) {
+                                bannerImg = firstImgInText.src;
+                            }
+                        }
+
+                        // Render elemen gambar HANYA JIKA bannerImg berhasil didapat
+                        // onerror digunakan agar elemen disembunyikan jika URL base64 korup
+                        const imageHTML = bannerImg 
+                            ? `<div class="h-48 w-full mb-4 overflow-hidden rounded-lg border border-gray-800/50 shadow-md">
+                                   <img src="${bannerImg}" class="w-full h-full object-cover" alt="${article.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+                               </div>` 
+                            : '';
 
                         const articleHTML = `
                         <article class="bg-[#12122a] rounded-xl p-6 border border-gray-800/50 transition hover:border-cyan-500/50 card-hover flex flex-col justify-between">
                             <div>
-                                ${bannerImg ? `<img src="${bannerImg}" class="w-full h-48 object-cover rounded-lg mb-4 border border-gray-800/30 shadow-md" alt="${article.title}" onerror="this.style.display='none'">` : ''}
+                                ${imageHTML}
                                 <span class="text-[10px] px-2 py-1 rounded ${catColor}">${article.category.toUpperCase()}</span>
                                 <h3 class="text-xl font-bold mt-3 mb-3">
                                     <a href="baca-artikel.html?id=${article.id}" class="hover:text-cyan-400">${article.title}</a>
