@@ -109,6 +109,9 @@
                 <button type="button" id="btnResetNotif" onclick="resetNotification()" class="px-3 py-2 border border-gray-700 hover:bg-gray-800 text-gray-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reset Notif
                 </button>
+                <button type="button" id="btnEditSelected" onclick="editSelectedArticle()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <i data-lucide="edit" class="w-4 h-4"></i> Edit Terpilih
+                </button>
                 <button type="button" id="btnBulkDelete" onclick="deleteSelectedArticles()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                     <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Terpilih (<span id="selectedCount">0</span>)
                 </button>
@@ -172,6 +175,18 @@
               input.value = ''; 
           }
       }
+
+      // ==========================================
+      // FITUR BARU: HAPUS FORMAT SAAT COPY PASTE
+      // Mencegah background putih dan font aneh
+      // ==========================================
+      document.getElementById('postContent').addEventListener('paste', function(e) {
+          e.preventDefault();
+          // Mengambil text murni (tanpa html/warna)
+          const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+          // Memasukkannya ke dalam editor
+          document.execCommand('insertText', false, text);
+      });
 
       document.addEventListener('DOMContentLoaded', fetchArticles);
 
@@ -273,16 +288,35 @@
           const checkboxes = document.querySelectorAll('.article-checkbox');
           const checkedBoxes = document.querySelectorAll('.article-checkbox:checked');
           const bulkBtn = document.getElementById('btnBulkDelete');
+          const editBtn = document.getElementById('btnEditSelected');
           const countSpan = document.getElementById('selectedCount');
           const selectAllBox = document.getElementById('selectAllCheckbox');
 
           countSpan.textContent = checkedBoxes.length;
+          
+          // Disable tombol hapus jika tidak ada yang dicentang
           bulkBtn.disabled = checkedBoxes.length === 0;
+          
+          // Disable tombol edit terpilih jika jumlah centang TIDAK SAMA DENGAN 1
+          if(editBtn) {
+              editBtn.disabled = checkedBoxes.length !== 1;
+          }
 
           if(checkboxes.length > 0 && checkedBoxes.length === checkboxes.length) {
               selectAllBox.checked = true;
           } else {
               selectAllBox.checked = false;
+          }
+      }
+
+      // ==========================================
+      // FITUR BARU: FUNGSI EDIT DARI CHECKBOX
+      // ==========================================
+      function editSelectedArticle() {
+          const checkedBoxes = document.querySelectorAll('.article-checkbox:checked');
+          if(checkedBoxes.length === 1) {
+              const articleId = checkedBoxes[0].value;
+              prepareEdit(articleId);
           }
       }
 
