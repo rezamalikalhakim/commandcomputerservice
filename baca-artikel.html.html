@@ -17,6 +17,12 @@
       .article-body p { margin-bottom: 1em; line-height: 1.7; }
       .article-body a { color: #00d2ff; text-decoration: underline; }
       .article-body ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1em; }
+
+/* Animasi Slide Menu */
+        .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+        .slide-menu.open { transform: translateX(0); }
+        .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.open { opacity: 1; pointer-events: all; }
   </style>
 </head>
 <body class="h-full flex flex-col">
