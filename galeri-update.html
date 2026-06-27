@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri - Command Computer Service</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+      body { background-color: #0a0a1a; color: #e5e7eb; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+      .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      
+      /* Slide Menu */
+      .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .slide-menu.open { transform: translateX(0); }
+      .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+      .overlay.open { opacity: 1; pointer-events: all; }
+
+      /* Animasi Slide Kiri dan Fade Out */
+      @keyframes slideLeftFadeOut {
+          0% { transform: translateX(50px); opacity: 0; }
+          15% { transform: translateX(0); opacity: 1; }
+          85% { transform: translateX(0); opacity: 1; }
+          100% { transform: translateX(-50px); opacity: 0; }
+      }
+      
+      .gallery-item {
+          opacity: 0;
+          animation: slideLeftFadeOut 6s infinite;
+      }
+      
+      /* Agar item bergantian delaynya */
+      .gallery-item:nth-child(odd) { animation-delay: 0s; }
+      .gallery-item:nth-child(even) { animation-delay: 3s; }
+      
+      /* Pause on hover */
+      .gallery-item:hover {
+          animation-play-state: paused;
+          opacity: 1 !important;
+          transform: scale(1.02);
+          transition: transform 0.3s ease;
+          z-index: 10;
+      }
+  </style>
+</head>
+<body class="h-full flex flex-col">
+
+  <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu()"></div>
+
+  <nav id="slideMenu" class="slide-menu fixed top-0 left-0 h-full w-72 bg-[#0f0f2a] z-50 shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-gray-800">
+     <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+       <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">CCS</div>
+       <span class="text-xs text-cyan-400 font-bold">Menu</span>
+      </div>
+      <button onclick="toggleMenu()" class="text-gray-400 hover:text-white"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+     </div>
+    </div>
+    
+    <ul class="p-4 space-y-1">
+     <li><a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i data-lucide="home" style="width:14px;height:14px;color:white;"></i></div> Home</a></li>
+     <li><a href="upload-galeri.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
+       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center"><i data-lucide="upload" style="width:14px;height:14px;color:white;"></i></div> Upload Galeri</a></li>
+    </ul>
+  </nav>
+
+  <header class="sticky top-0 z-30 bg-[#0a0a1a]/90 backdrop-blur-md border-b border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+     <div class="flex items-center gap-2">
+      <button onclick="toggleMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition-colors"><i data-lucide="menu" style="width:22px;height:22px;"></i></button>
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">CCS</div>
+      <div>
+       <a href="index.html"><h1 class="text-lg font-bold gradient-text">Command Computer Service</h1></a>
+       <p class="text-[10px] text-gray-500">by Reza Malik Al Hakim</p>
+      </div>
+     </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
+     <h2 class="text-4xl font-bold mb-4 text-center"><span class="gradient-text">Galeri Kami</span></h2>
+     <p class="text-gray-400 text-center mb-12">Dokumentasi hasil pengerjaan, foto kegiatan, dan cuplikan video Command Computer Service.</p>
+
+     <div id="loadingState" class="text-center py-20">
+         <i data-lucide="loader-2" class="w-10 h-10 animate-spin mx-auto text-cyan-500 mb-4"></i>
+         <p class="text-gray-400">Memuat Galeri...</p>
+     </div>
+
+     <div id="galeriGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+        <!-- Media akan dimuat di sini oleh JS -->
+     </div>
+  </main>
+
+  <footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center mt-auto">
+      <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
+  </footer>
+
+  <script>
+      lucide.createIcons();
+      const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/galeri.json';
+
+      function toggleMenu() {
+            const menu = document.getElementById('slideMenu');
+            const overlay = document.getElementById('overlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('open');
+      }
+
+      async function loadGaleri() {
+          const grid = document.getElementById('galeriGrid');
+          const loading = document.getElementById('loadingState');
+
+          try {
+              const response = await fetch(firebaseUrl);
+              const data = await response.json();
+
+              loading.classList.add('hidden');
+              grid.classList.remove('hidden');
+
+              if (!data) {
+                  grid.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada foto/video yang diupload.</p>';
+                  return;
+              }
+
+              const medias = Object.entries(data).sort((a, b) => new Date(b[1].waktu) - new Date(a[1].waktu));
+
+              medias.forEach(([id, item], index) => {
+                  let mediaContent = '';
+                  if(item.type === 'Image') {
+                      mediaContent = \`<img src="\${item.media}" alt="\${item.title}" class="w-full h-56 object-cover rounded-t-xl" onerror="this.src=''">\`;
+                  } else {
+                      // Asumsikan URL embed atau video src
+                      mediaContent = \`
+                      <div class="w-full h-56 bg-black rounded-t-xl overflow-hidden flex items-center justify-center relative">
+                          <iframe src="\${item.media}" class="w-full h-full absolute inset-0" frameborder="0" allowfullscreen></iframe>
+                      </div>\`;
+                  }
+
+                  // Variasi delay animasi
+                  const delay = (index % 3) * 2; 
+
+                  grid.innerHTML += \`
+                      <div class="gallery-item bg-[#12122a] rounded-xl border border-gray-800/50 flex flex-col shadow-lg overflow-hidden" style="animation-delay: \${delay}s">
+                          \${mediaContent}
+                          <div class="p-4 bg-gradient-to-t from-[#0a0a1a] to-[#12122a]">
+                              <p class="text-sm font-semibold text-white line-clamp-2">\${item.title}</p>
+                              <span class="text-[10px] text-cyan-400 mt-2 block bg-cyan-500/10 w-max px-2 py-0.5 rounded">\${item.type.toUpperCase()}</span>
+                          </div>
+                      </div>
+                  \`;
+              });
+
+          } catch(err) {
+              loading.innerHTML = '<p class="text-red-400">Gagal memuat galeri.</p>';
+          }
+      }
+
+      document.addEventListener('DOMContentLoaded', loadGaleri);
+  </script>
+</body>
+</html>
