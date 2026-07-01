@@ -13,35 +13,41 @@
         body { background-color: #0a0a1a; color: #e5e7eb; overflow-x: hidden; }
         .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Animasi Slide Menu Navigasi */
+        /* Animasi Slide Menu */
         .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
         .slide-menu.open { transform: translateX(0); }
         .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .overlay.open { opacity: 1; pointer-events: all; }
 
-        /* FITUR ANIMASI BARU: Smooth Fade-In Up (Item tetap tampil 100% setelah meluncur masuk) */
-        @keyframes fadeInUp {
+        /* KRITERIA ANIMASI BARU: Bergerak slide kiri & efek fade out (Diperbaiki agar tidak hilang) */
+        @keyframes slideLeftFadeOut {
             0% {
-                transform: translateY(20px);
+                transform: translateX(40px);
                 opacity: 0;
             }
-            100% {
-                transform: translateY(0);
+            12% {
+                transform: translateX(0);
                 opacity: 1;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1; /* Diubah menjadi 1 agar menetap dan tidak menghilang */
             }
         }
         
         .gallery-card {
             opacity: 0;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            /* forwards digunakan agar setelah animasi selesai, frame terakhir (opacity 1) dipertahankan */
+            animation: slideLeftFadeOut 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        /* Efek Hover Interaktif Cyberpunk */
+        /* Hover Effect: Interaksi zoom dan glow cyberpunk */
         .gallery-card:hover {
-            transform: translateY(-6px) scale(1.02) !important;
-            box-shadow: 0 12px 24px rgba(0, 210, 255, 0.2);
+            transform: scale(1.03) translateY(-4px) !important;
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.15);
             border-color: #00d2ff;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
   </style>
 </head>
@@ -84,12 +90,12 @@
   <main class="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
      <div class="text-center mb-16">
          <h2 class="text-4xl font-extrabold mb-3 tracking-tight"><span class="gradient-text">Galeri Dokumentasi</span></h2>
-         <p class="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">Dokumentasi pengerjaan service, rakit PC, maintenance server, dan setup jaringan.</p>
+         <p class="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">Dokumentasi pengerjaan service laptop, rakit PC, maintenance server, dan setup jaringan komputer.</p>
      </div>
 
      <div id="loadingState" class="text-center py-20">
          <i data-lucide="loader-2" class="w-10 h-10 animate-spin mx-auto text-cyan-400 mb-4"></i>
-         <p class="text-sm text-gray-500 mono">MENGAMBIL DATA DARI DATABASE...</p>
+         <p class="text-sm text-gray-500 mono">MENGAMBIL MEDIA DARI DATABASE...</p>
      </div>
 
      <div id="galeriGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
@@ -115,14 +121,11 @@
           }
       }
 
-      // Fungsi Helper: Normalisasi Link Video YouTube agar selalu bisa di-embed di Iframe
-      function formatYoutubeEmbedUrl(url) {
+      // FITUR BARU: Konversi Otomatis Link YouTube biasa menjadi Link Embed (Iframe Anti-Error)
+      function extractEmbedUrl(url) {
           if (!url) return '';
           let videoId = '';
-          
-          if (url.includes('youtube.com/embed/')) {
-              return url;
-          }
+          if (url.includes('youtube.com/embed/')) return url;
           if (url.includes('youtube.com/watch?v=')) {
               videoId = url.split('v=')[1].split('&')[0];
               return `https://www.youtube.com/embed/${videoId}`;
@@ -146,32 +149,32 @@
               grid.classList.remove('hidden');
 
               if (!data) {
-                  grid.innerHTML = '<div class="text-center text-gray-500 col-span-full py-12 mono">BELUM ADA DOKUMENTASI MEDIA DI GALERI.</div>';
+                  grid.innerHTML = '<div class="text-center text-gray-500 col-span-full py-12">Belum ada dokumentasi media di dalam galeri ini.</div>';
                   return;
               }
 
-              // Mengurutkan media berdasarkan waktu terbaru
               const items = Object.entries(data).sort((a, b) => new Date(b[1].waktu) - new Date(a[1].waktu));
               grid.innerHTML = '';
 
               items.forEach(([id, item], index) => {
                   let mediaElement = '';
                   
-                  if (item.type === 'Image') {
-                      // Merender gambar Base64 / URL Gambar biasa
+                  if(item.type === 'Image') {
+                      // Template literal untuk Gambar
                       mediaElement = `<img src="${item.media}" alt="${item.title}" class="w-full h-56 object-cover rounded-t-xl" loading="lazy">`;
                   } else {
-                      // Menormalisasi URL video YouTube sebelum dimasukkan ke dalam iframe
-                      const validEmbedUrl = formatYoutubeEmbedUrl(item.media);
+                      // Template literal untuk Video
+                      const safeUrl = extractEmbedUrl(item.media);
                       mediaElement = `
                       <div class="w-full h-56 bg-black rounded-t-xl overflow-hidden relative">
-                          <iframe src="${validEmbedUrl}" class="w-full h-full absolute inset-0 border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                          <iframe src="${safeUrl}" class="w-full h-full absolute inset-0 border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                       </div>`;
                   }
 
-                  // Memberikan efek stagger delay yang rapi saat item pertama kali meluncur masuk
-                  const delayValue = (index * 0.1).toFixed(1);
+                  // Variasi stagger delay agar animasi mulus dan tidak bersamaan
+                  const delayValue = (index * 0.2).toFixed(1);
 
+                  // Memasukkan template data ke dalam HTML Grid
                   grid.innerHTML += `
                       <div class="gallery-card bg-[#12122a] rounded-xl border border-gray-800/50 overflow-hidden shadow-lg flex flex-col" style="animation-delay: ${delayValue}s;">
                           ${mediaElement}
@@ -187,8 +190,8 @@
               });
 
           } catch (error) {
-              console.error("Gagal memuat data galeri:", error);
-              loader.innerHTML = '<p class="text-red-400 text-sm font-medium mono">ERROR: GAGAL MEMUAT DATABASE GALERI.</p>';
+              console.error(error);
+              loader.innerHTML = '<p class="text-red-400 text-sm font-medium">Gagal memuat galeri media. Silakan periksa koneksi internet Anda.</p>';
           }
           lucide.createIcons();
       }
