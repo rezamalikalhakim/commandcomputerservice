@@ -6,40 +6,40 @@
   <title>Upload Galeri - Command Computer Service</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-      body { background-color: #0a0a1a; color: #e5e7eb; font-family: 'Plus Jakarta Sans', sans-serif; }
-      .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-      .input-field { width: 100%; padding: 12px; background: #12122a; border: 1px solid #1f2937; border-radius: 8px; color: white; margin-top: 8px; }
-      .input-field:focus { outline: none; border-color: #00d2ff; }
-      
-      /* Animasi Slide Menu */
-      .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
-      .slide-menu.open { transform: translateX(0); }
-      .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-      .overlay.open { opacity: 1; pointer-events: all; }
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+        body { background-color: #0a0a1a; color: #e5e7eb; }
+        .gradient-text { background: linear-gradient(135deg, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-field { width: 100%; padding: 12px; background: #0a0a1a; border: 1px solid #1f2937; border-radius: 8px; color: white; margin-top: 8px; }
+        .input-field:focus { outline: none; border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
+        
+        /* Animasi Slide Menu */
+        .slide-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+        .slide-menu.open { transform: translateX(0); }
+        .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .overlay.open { opacity: 1; pointer-events: all; }
   </style>
 </head>
 <body class="h-full flex flex-col">
 
-  <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu()"></div>
+  <div id="overlay" class="overlay fixed inset-0 bg-black/60 z-40" onclick="toggleMenu(false)"></div>
 
   <nav id="slideMenu" class="slide-menu fixed top-0 left-0 h-full w-72 bg-[#0f0f2a] z-50 shadow-2xl overflow-y-auto">
-    <div class="p-6 border-b border-gray-800">
+    <div class="p-6 border-b border-gray-800/50">
      <div class="flex items-center justify-between gap-3">
       <div class="flex items-center gap-2">
        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">CCS</div>
-       <span class="mono text-xs text-cyan-400 font-bold">Menu</span>
+       <span class="mono text-xs text-cyan-400 font-bold">MENU PANEL</span>
       </div>
-      <button onclick="toggleMenu()" class="text-gray-400 hover:text-white"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
+      <button onclick="toggleMenu(false)" class="text-gray-400 hover:text-white"><i data-lucide="x" style="width:24px;height:24px;"></i></button>
      </div>
     </div>
     
     <ul class="p-4 space-y-1">
-     <li><a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
-       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center"><i data-lucide="home" style="width:14px;height:14px;color:white;"></i></div> Home</a></li>
-     <li><a href="galeri.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all">
-       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center"><i data-lucide="image" style="width:14px;height:14px;color:white;"></i></div> Galeri</a></li>
+     <li><a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all"><i data-lucide="home" class="w-5 h-5"></i> Dashboard</a></li>
+     <li><a href="galeri.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 transition-all"><i data-lucide="image" class="w-5 h-5"></i> Lihat Galeri</a></li>
     </ul>
   </nav>
 
@@ -53,85 +53,88 @@
        <p class="text-[10px] text-gray-500 mono">by Reza Malik Al Hakim</p>
       </div>
      </div>
-     <div class="hidden md:flex items-center gap-6 text-sm">
-        <a href="galeri.html" class="text-gray-400 hover:text-white transition-colors">Lihat Galeri</a>
-     </div>
     </div>
   </header>
 
-  <section class="max-w-3xl mx-auto px-4 py-12 flex-grow">
-    <div class="bg-[#12122a] p-8 rounded-xl border border-gray-800/50">
-        <div class="flex justify-between items-center mb-6">
-            <h2 id="formTitle" class="text-2xl font-bold text-white">Upload Media ke Galeri</h2>
-        </div>
+  <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
+    <div class="bg-[#12122a] p-8 rounded-xl border border-gray-800/50 shadow-xl">
+        <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+            <i data-lucide="upload-cloud" class="text-cyan-400"></i> Upload Media Galeri
+        </h2>
+        <p class="text-sm text-gray-400 mb-6">Tambahkan dokumentasi foto pengerjaan service atau link video kegiatan ke galeri.</p>
         
         <form id="uploadGaleriForm" class="space-y-6">
             <div>
-                <label class="text-sm text-gray-400">Judul / Caption Media</label>
-                <input type="text" id="mediaTitle" class="input-field" placeholder="Contoh: Proses Service Laptop Asus..." required>
+                <label class="text-sm font-semibold text-gray-300 block">Judul / Keterangan Media</label>
+                <input type="text" id="mediaTitle" class="input-field" placeholder="Contoh: Perbaikan Engsel Laptop Asus ROG" required>
             </div>
 
             <div>
-                <label class="text-sm text-gray-400">Tipe Media</label>
+                <label class="text-sm font-semibold text-gray-300 block">Tipe Media</label>
                 <select id="mediaType" class="input-field" onchange="toggleMediaInput()">
-                    <option value="Image">Foto / Gambar</option>
-                    <option value="VideoURL">Video (Link YouTube / Drive)</option>
+                    <option value="Image">Foto / Gambar (Base64)</option>
+                    <option value="VideoURL">Video (Link YouTube / URL)</option>
                 </select>
             </div>
 
             <div id="imageInputContainer">
-                <label class="text-sm text-gray-400">Pilih Foto (Maks disarankan 2MB)</label>
-                <input type="file" id="mediaFile" accept="image/*" class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cyan-500 file:text-black hover:file:bg-cyan-400">
+                <label class="text-sm font-semibold text-gray-300 block">Pilih File Gambar</label>
+                <input type="file" id="mediaFile" accept="image/*" class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-cyan-500/20 file:text-cyan-400 hover:file:bg-cyan-500/30 file:cursor-pointer">
             </div>
 
             <div id="videoInputContainer" class="hidden">
-                <label class="text-sm text-gray-400">Link Video (Embed URL)</label>
-                <input type="url" id="mediaVideoUrl" class="input-field" placeholder="Masukkan link video (misal link YouTube embed)...">
+                <label class="text-sm font-semibold text-gray-300 block">Link Video (Boleh Embed atau Direct URL YouTube)</label>
+                <input type="url" id="mediaVideoUrl" class="input-field" placeholder="https://www.youtube.com/watch?v=...">
             </div>
 
-            <button type="submit" id="btnSubmit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
-                Upload ke Galeri
+            <button type="submit" id="btnSubmit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg hover:opacity-90 transition-all duration-200 shadow-lg shadow-cyan-500/10 flex items-center justify-center gap-2">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i> Simpan ke Galeri
             </button>
-            <p id="uploadStatus" class="text-sm mt-2 hidden text-center"></p>
+            <p id="uploadStatus" class="text-sm mt-2 hidden text-center font-medium"></p>
         </form>
     </div>
-    
-    <div class="mt-8 bg-[#12122a] p-8 rounded-xl border border-gray-800/50">
-        <h3 class="text-xl font-bold text-white mb-4">Riwayat Galeri</h3>
-        <p id="tableStatus" class="text-sm mb-4 hidden text-center p-2 rounded"></p>
-        <div class="overflow-x-auto rounded-lg border border-gray-800">
+
+    <div class="mt-12 bg-[#12122a] p-8 rounded-xl border border-gray-800/50 shadow-xl">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <i data-lucide="database" class="text-purple-400"></i> Manajamen Data Galeri
+        </h3>
+        <div class="overflow-x-auto rounded-lg border border-gray-800/50">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#1a1a35] border-b border-gray-800 text-gray-400 text-xs font-semibold uppercase">
-                        <th class="py-3 px-4">Caption</th>
-                        <th class="py-3 px-4 w-28">Tipe</th>
-                        <th class="py-3 px-4 w-44">Waktu</th>
-                        <th class="py-3 px-4 w-24 text-center">Aksi</th>
+                    <tr class="bg-[#1a1a35] border-b border-gray-800 text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                        <th class="py-3.5 px-4">Keterangan / Judul</th>
+                        <th class="py-3.5 px-4 w-28">Tipe</th>
+                        <th class="py-3.5 px-4 w-36">Waktu</th>
+                        <th class="py-3.5 px-4 w-24 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="galeriTableBody" class="divide-y divide-gray-800 text-sm">
+                <tbody id="galeriTableBody" class="divide-y divide-gray-800/60 text-sm">
                     <tr>
-                        <td colspan="4" class="py-8 text-center text-gray-500">Memuat data galeri...</td>
+                        <td colspan="4" class="py-8 text-center text-gray-500">Memuat data dari database...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-  </section>
+  </main>
 
   <footer class="bg-[#060612] border-t border-gray-800/50 py-6 text-center">
       <p class="text-xs text-gray-600"><strong>© 2021 Command Computer Service</strong> | By. Reza Malik Al Hakim</p>
   </footer>
 
   <script>
-      lucide.createIcons();
       const firebaseUrl = 'https://command-computer-service-blog-default-rtdb.asia-southeast1.firebasedatabase.app/galeri';
 
-      function toggleMenu() {
-            const menu = document.getElementById('slideMenu');
-            const overlay = document.getElementById('overlay');
-            menu.classList.toggle('open');
-            overlay.classList.toggle('open');
+      function toggleMenu(forceClose) {
+          const menu = document.getElementById('slideMenu');
+          const overlay = document.getElementById('overlay');
+          if (forceClose === false || menu.classList.contains('open')) {
+              menu.classList.remove('open');
+              overlay.classList.remove('open');
+          } else {
+              menu.classList.add('open');
+              overlay.classList.add('open');
+          }
       }
 
       function toggleMediaInput() {
@@ -149,40 +152,38 @@
           e.preventDefault();
           const btn = document.getElementById('btnSubmit');
           const status = document.getElementById('uploadStatus');
-          btn.textContent = 'Mempublish...';
+          
           btn.disabled = true;
+          btn.innerHTML = '<i class="w-5 h-5 animate-spin" data-lucide="loader-2"></i> Memproses...';
+          lucide.createIcons();
           
           const title = document.getElementById('mediaTitle').value;
           const type = document.getElementById('mediaType').value;
-          
           let mediaData = '';
 
           if(type === 'Image') {
               const fileInput = document.getElementById('mediaFile').files[0];
               if(!fileInput) {
-                  alert('Silakan pilih foto terlebih dahulu!');
-                  btn.textContent = 'Upload ke Galeri';
-                  btn.disabled = false;
+                  alert('Silakan pilih file foto terlebih dahulu!');
+                  resetBtn();
                   return;
               }
-              const toBase64 = file => new Promise((resolve, reject) => {
+              // Konversi File ke Base64
+              mediaData = await new Promise((resolve) => {
                   const reader = new FileReader();
-                  reader.readAsDataURL(file);
+                  reader.readAsDataURL(fileInput);
                   reader.onload = () => resolve(reader.result);
-                  reader.onerror = error => reject(error);
               });
-              mediaData = await toBase64(fileInput);
           } else {
               mediaData = document.getElementById('mediaVideoUrl').value;
               if(!mediaData) {
-                  alert('Silakan masukkan URL Video!');
-                  btn.textContent = 'Upload ke Galeri';
-                  btn.disabled = false;
+                  alert('Silakan masukkan link video!');
+                  resetBtn();
                   return;
               }
           }
 
-          const dataPayload = {
+          const payload = {
               title: title,
               type: type,
               media: mediaData,
@@ -190,70 +191,84 @@
           };
 
           try {
-              const response = await fetch(firebaseUrl + '.json', {
+              // Harus ada .json saat POST
+              const response = await fetch(`${firebaseUrl}.json`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(dataPayload)
+                  body: JSON.stringify(payload)
               });
 
               if(response.ok) {
-                  status.textContent = '✅ Media berhasil diupload ke Galeri!';
+                  status.textContent = '✅ Berhasil menambahkan ke galeri!';
                   status.className = 'text-sm mt-2 text-green-400 block text-center';
                   document.getElementById('uploadGaleriForm').reset();
                   toggleMediaInput();
                   fetchGaleri();
               } else {
-                  throw new Error('Gagal');
+                  throw new Error();
               }
           } catch (error) {
-              status.textContent = '❌ Terjadi kesalahan koneksi.';
+              status.textContent = '❌ Terjadi kesalahan pengiriman data.';
               status.className = 'text-sm mt-2 text-red-400 block text-center';
           } finally {
-              btn.textContent = 'Upload ke Galeri';
+              resetBtn();
+          }
+
+          function resetBtn() {
               btn.disabled = false;
+              btn.innerHTML = '<i data-lucide="plus-circle" class="w-5 h-5"></i> Simpan ke Galeri';
+              lucide.createIcons();
           }
       });
 
       async function fetchGaleri() {
           const tbody = document.getElementById('galeriTableBody');
           try {
-              const response = await fetch(firebaseUrl + '.json');
+              // GET juga harus pakai .json
+              const response = await fetch(`${firebaseUrl}.json`);
               const data = await response.json();
               tbody.innerHTML = '';
+              
               if (!data) {
-                  tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-gray-500">Belum ada media di galeri.</td></tr>';
+                  tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-gray-500">Belum ada koleksi media.</td></tr>';
                   return;
               }
-              const sortedData = Object.entries(data).sort((a, b) => new Date(b[1].waktu) - new Date(a[1].waktu));
-              sortedData.forEach(([id, item]) => {
-                  const time = new Date(item.waktu).toLocaleDateString('id-ID');
+
+              const sorted = Object.entries(data).sort((a, b) => new Date(b[1].waktu) - new Date(a[1].waktu));
+              sorted.forEach(([id, item]) => {
+                  const dateStr = new Date(item.waktu).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                  const badgeColor = item.type === 'Image' ? 'bg-cyan-500/10 text-cyan-400' : 'bg-purple-500/10 text-purple-400';
+                  
                   tbody.innerHTML += `
                       <tr class="hover:bg-[#161635] transition-colors">
-                          <td class="py-3.5 px-4 text-white">${item.title}</td>
-                          <td class="py-3.5 px-4 text-cyan-400 text-xs">${item.type}</td>
-                          <td class="py-3.5 px-4 text-gray-400 text-xs">${time}</td>
+                          <td class="py-3.5 px-4 font-medium text-white">${item.title}</td>
+                          <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs ${badgeColor}">${item.type}</span></td>
+                          <td class="py-3.5 px-4 text-gray-400 text-xs">${dateStr}</td>
                           <td class="py-3.5 px-4 text-center">
-                              <button onclick="deleteMedia('${id}')" class="p-1 hover:text-red-400 text-gray-500"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                              <button onclick="deleteMedia('${id}')" class="p-1.5 text-gray-500 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                           </td>
                       </tr>`;
               });
               lucide.createIcons();
           } catch (err) {
-              tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-red-400">Gagal memuat riwayat galeri.</td></tr>';
+              tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-red-400">Gagal memuat database galeri.</td></tr>';
           }
       }
 
       async function deleteMedia(id) {
-          if(!confirm('Hapus media ini dari galeri?')) return;
+          if(!confirm('Hapus item galeri ini permanen?')) return;
           try {
               await fetch(`${firebaseUrl}/${id}.json`, { method: 'DELETE' });
               fetchGaleri();
           } catch(e) {
-              alert('Gagal menghapus');
+              alert('Koneksi gagal menghapus data.');
           }
       }
 
-      document.addEventListener('DOMContentLoaded', fetchGaleri);
+      document.addEventListener('DOMContentLoaded', () => {
+          lucide.createIcons();
+          fetchGaleri();
+      });
   </script>
 </body>
 </html>
