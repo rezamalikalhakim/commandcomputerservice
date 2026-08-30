@@ -301,5 +301,20 @@
 
         document.addEventListener('DOMContentLoaded', loadLatestArticles);
   </script>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          // Cek apakah di browser pengunjung sudah ada data 'ad_viewed'
+          let hasSeenAd = localStorage.getItem('ad_viewed');
+
+          if (!hasSeenAd) {
+              // Jika belum ada, set data tersebut di browser
+              localStorage.setItem('ad_viewed', 'true');
+              
+              // Langsung alihkan pengunjung ke link iklan
+              window.location.href = "https://speedy-links.com/s?2IFiLyi7";
+          }
+      });
+  </script>
 </body>
 </html>
